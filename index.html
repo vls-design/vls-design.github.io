@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VLS · AI·공학·디자인 교육</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --ink:#141a2e;
+    --ink-2:#4a5068;
+    --muted:#8a90a3;
+    --line:#e6e8ee;
+    --bg:#f6f7f9;
+    --card:#ffffff;
+    --accent:#4b57d6;
+    --accent-soft:#eef0fc;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:Pretendard,"Malgun Gothic",-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.6}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+
+  /* ── Header ─────────────────────────── */
+  header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:.02em}
+  .logo b{width:30px;height:30px;border-radius:7px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:14px}
+  .menu{display:flex;gap:28px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+  .menu a.on{color:var(--accent)}
+  .menu a::after{content:" ⌄";font-size:11px;color:var(--muted)}
+  .util{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--ink-2)}
+  .btn-dark{background:var(--ink);color:#fff;padding:8px 14px;border-radius:8px;font-weight:600}
+
+  /* ── Hero ───────────────────────────── */
+  .crumb{font-size:12.5px;color:var(--muted);padding-top:28px}
+  .crumb span{color:var(--ink-2)}
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding:36px 0 64px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase}
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  h1{font-size:48px;line-height:1.22;margin:16px 0 20px;letter-spacing:-.02em;font-weight:800}
+  h1 em{font-style:normal;color:var(--accent)}
+  .lead{color:var(--ink-2);font-size:15.5px;margin:0 0 28px}
+  .cta{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:9px;font-weight:600;font-size:14px;border:1px solid var(--line);background:#fff}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .meta{margin-top:18px;font-size:12.5px;color:var(--muted)}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 12px 32px -18px rgba(20,26,46,.18)}
+  .panel-top{display:flex;justify-content:space-between;font-size:11.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+  .panel-top b{color:var(--accent)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 22px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+  .stats div{font-size:12px;color:var(--muted)}
+  .stats strong{display:block;font-size:26px;color:var(--ink);font-weight:800;letter-spacing:-.02em}
+  .panel h4{display:flex;justify-content:space-between;font-size:13px;margin:0 0 12px}
+  .panel h4 span{font-weight:500;color:var(--muted)}
+  .row{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:8px;font-size:13.5px;font-weight:600}
+  .row i{font-style:normal;font-size:11.5px;color:var(--muted);width:20px}
+  .row small{margin-left:auto;font-size:10.5px;letter-spacing:.1em;color:var(--muted);font-weight:600}
+
+  /* ── Sections ───────────────────────── */
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px}
+  .sec-head h2{font-size:24px;margin:0;letter-spacing:-.01em}
+  .sec-head p{margin:0;font-size:13px;color:var(--muted)}
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .chip{padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;min-height:196px;transition:border-color .15s,transform .15s}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .card .tag{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+  .card h3{font-size:15.5px;margin:14px 0 6px;line-height:1.4}
+  .card p{font-size:12.5px;color:var(--ink-2);margin:0}
+  .card .foot{margin-top:auto;padding-top:14px;display:flex;gap:6px;flex-wrap:wrap}
+  .pill{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--bg);color:var(--ink-2)}
+  .pill.a{background:var(--accent-soft);color:var(--accent)}
+  .card.hidden{display:none}
+
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:s}
+  .step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .step b{font-size:11px;letter-spacing:.12em;color:var(--accent)}
+  .step h3{font-size:15px;margin:10px 0 6px}
+  .step p{font-size:12.5px;color:var(--ink-2);margin:0}
+  .step small{display:block;margin-top:12px;font-size:11.5px;color:var(--muted)}
+
+  .tracks{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .track{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+  .track .tag{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.08em;color:var(--muted)}
+  .track h3{font-size:14.5px;margin:12px 0 4px}
+  .track p{font-size:12px;color:var(--ink-2);margin:0}
+  .track.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+  .track.on .tag{color:var(--accent)}
+
+  .band{background:var(--ink);color:#fff;border-radius:18px;padding:36px 40px;display:flex;justify-content:space-between;align-items:center;gap:24px}
+  .band h2{margin:0 0 6px;font-size:22px}
+  .band p{margin:0;color:#b8bccb;font-size:13.5px}
+  .band .btn{border:none}
+
+  footer{border-top:1px solid var(--line);background:#fff}
+  footer .wrap{display:flex;justify-content:space-between;padding-top:22px;padding-bottom:22px;font-size:12px;color:var(--muted)}
+
+  @media (max-width:900px){
+    .menu{display:none}
+    .hero{grid-template-columns:1fr;gap:32px}
+    h1{font-size:36px}
+    .grid,.steps,.tracks{grid-template-columns:repeat(2,1fr)}
+    .band{flex-direction:column;align-items:flex-start}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 16px}
+    .grid,.steps,.tracks{grid-template-columns:1fr}
+    .sec-head{flex-direction:column;align-items:flex-start}
+    footer .wrap{flex-direction:column;gap:6px}
+    .util a:not(.btn-dark){display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#"><b>V</b>VLS</a>
+    <nav class="menu">
+      <a class="on" href="#">프로그램 찾기</a>
+      <a href="#">단체 프로그램 구성</a>
+      <a href="#">기관·강사 참여</a>
+      <a href="#">VLS 소개</a>
+      <a href="#">고객지원</a>
+    </nav>
+    <div class="util"><a href="#">KR</a><a href="#">로그인</a><a class="btn-dark" href="#">회원가입</a></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="crumb">홈 › 프로그램 찾기 › <span>01 / EDUCATION</span></div>
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow">01 / Education · AI·Engineering·Design</div>
+      <h1>기술을 배우고,<br><em>직접 만들어 보는 시간.</em></h1>
+      <p class="lead">동서대학교 컴퓨터공학과의 AI·AIGC·디자인·콘텐츠 강좌를<br>원하는 일정에 맞춰 골라 담으세요. 2~3시간 실습형 강좌로 구성됩니다.</p>
+      <div class="cta">
+        <a class="btn primary" href="#courses">강좌 메뉴판 보기 ↗</a>
+        <a class="btn" href="#steps">단체 신청 방법 →</a>
+      </div>
+      <div class="meta">초·중·고 단체 · 대학생 교류단 · 관광객 · 일반인 그룹 대상</div>
+    </div>
+
+    <aside class="panel">
+      <div class="panel-top"><span>My Course Plan</span><b>VLS / 01</b></div>
+      <div class="stats">
+        <div><strong>8</strong>교육 강좌</div>
+        <div><strong>2–3h</strong>강좌당 소요</div>
+        <div><strong>4</strong>분야</div>
+      </div>
+      <h4>예시 구성 · 1일 코스 <span>담은 강좌 3</span></h4>
+      <div class="row"><i>01</i>AI 기초와 생활 속 인공지능<small>AI</small></div>
+      <div class="row"><i>02</i>생성형 AI로 만드는 이미지·영상<small>AIGC</small></div>
+      <div class="row"><i>03</i>굿즈·캐릭터 디자인 워크숍<small>DESIGN</small></div>
+      <div class="row" style="border-style:dashed;color:var(--muted);font-weight:500"><i>+</i>강좌 추가하기</div>
+    </aside>
+  </div>
+
+  <section id="courses">
+    <div class="sec-head">
+      <h2>교육 강좌 메뉴판</h2>
+      <p>여러 강좌를 골라 하나의 일정으로 묶을 수 있습니다.</p>
+    </div>
+    <div class="chips" role="tablist">
+      <button class="chip on" data-f="all">전체</button>
+      <button class="chip" data-f="ai">인공지능(AI)</button>
+      <button class="chip" data-f="aigc">AIGC</button>
+      <button class="chip" data-f="design">디자인</button>
+      <button class="chip" data-f="content">콘텐츠</button>
+    </div>
+    <div class="grid">
+      <a class="card" data-c="ai" href="#"><div class="tag"><span>E-01 / AI</span><span>↗</span></div><h3>AI 기초와 생활 속 인공지능</h3><p>일상 속 AI 사례로 원리를 이해하고 직접 체험합니다.</p><div class="foot"><span class="pill a">이론+체험</span><span class="pill">2시간</span></div></a>
+      <a class="card" data-c="ai" href="#"><div class="tag"><span>E-02 / AI</span><span>↗</span></div><h3>머신러닝 체험 실습</h3><p>데이터를 모으고 학습시켜 나만의 분류 모델을 만듭니다.</p><div class="foot"><span class="pill a">실습</span><span class="pill">3시간</span></div></a>
+      <a class="card" data-c="aigc" href="#"><div class="tag"><span>E-03 / AIGC</span><span>↗</span></div><h3>생성형 AI로 만드는 이미지·영상</h3><p>프롬프트 설계부터 짧은 영상 완성까지 실습합니다.</p><div class="foot"><span class="pill a">실습</span><span class="pill">3시간</span></div></a>
+      <a class="card" data-c="aigc" href="#"><div class="tag"><span>E-04 / AIGC</span><span>↗</span></div><h3>AI 챗봇·콘텐츠 제작 워크숍</h3><p>주제를 정해 대화형 챗봇과 소개 콘텐츠를 만듭니다.</p><div class="foot"><span class="pill a">실습</span><span class="pill">2시간</span></div></a>
+      <a class="card" data-c="design" href="#"><div class="tag"><span>E-05 / Design</span><span>↗</span></div><h3>UX/UI 디자인 입문</h3><p>앱 화면을 분석하고 간단한 프로토타입을 그려봅니다.</p><div class="foot"><span class="pill a">이론+실습</span><span class="pill">2시간</span></div></a>
+      <a class="card" data-c="design" href="#"><div class="tag"><span>E-06 / Design</span><span>↗</span></div><h3>굿즈·캐릭터 디자인 워크숍</h3><p>여행 테마 캐릭터를 디자인해 굿즈 시안으로 완성합니다.</p><div class="foot"><span class="pill a">실습</span><span class="pill">3시간</span></div></a>
+      <a class="card" data-c="content" href="#"><div class="tag"><span>E-07 / Content</span><span>↗</span></div><h3>영상 콘텐츠 기획 및 제작</h3><p>부산 여행 브이로그를 기획·촬영·편집합니다.</p><div class="foot"><span class="pill a">실습</span><span class="pill">3시간</span></div></a>
+      <a class="card" data-c="content" href="#"><div class="tag"><span>E-08 / Content</span><span>↗</span></div><h3>메타버스·게임 콘텐츠 체험</h3><p>메타버스 공간과 게임 제작 도구를 직접 다뤄봅니다.</p><div class="foot"><span class="pill a">체험</span><span class="pill">2시간</span></div></a>
+    </div>
+  </section>
+
+  <section id="steps">
+    <div class="sec-head">
+      <h2>이렇게 진행됩니다</h2>
+      <p>메뉴판 선택부터 수강료 확정까지 4단계</p>
+    </div>
+    <div class="steps">
+      <div class="step"><b>STEP 01</b><h3>강좌 고르기</h3><p>메뉴판에서 원하는 강좌를 복수로 선택합니다.</p><small>참가 그룹</small></div>
+      <div class="step"><b>STEP 02</b><h3>일정·인원 신청</h3><p>방문 기간, 인원, 문화체험 동반 여부를 함께 제출합니다.</p><small>참가 그룹</small></div>
+      <div class="step"><b>STEP 03</b><h3>강사·장소 확인</h3><p>신청 일정에 맞춰 강사 배정과 강의실을 점검합니다.</p><small>운영 관리자</small></div>
+      <div class="step"><b>STEP 04</b><h3>일정·수강료 확정</h3><p>최종 일정과 Tuition Fee를 안내해 드립니다.</p><small>운영 관리자 ↔ 그룹</small></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>함께 구성하면 좋은 프로그램</h2>
+      <p>교육 강좌에 다른 분야를 더해 일정을 완성하세요.</p>
+    </div>
+    <div class="tracks">
+      <a class="track on" href="#"><div class="tag"><span>01 / EDUCATION</span><span>현재</span></div><h3>AI·공학·디자인 교육</h3><p>새로운 기술과 창작의 방법을 배웁니다.</p></a>
+      <a class="track" href="#"><div class="tag"><span>02 / HERITAGE</span><span>↗</span></div><h3>장인·문화유산 학습</h3><p>손으로 만들며 문화의 맥락을 이해합니다.</p></a>
+      <a class="track" href="#"><div class="tag"><span>03 / CAMPUS</span><span>↗</span></div><h3>교육기관 방문</h3><p>대학과 연구 현장에서 교류합니다.</p></a>
+      <a class="track" href="#"><div class="tag"><span>04 / INDUSTRY</span><span>↗</span></div><h3>기업 방문·실무 학습</h3><p>산업과 현장의 경험을 연결합니다.</p></a>
+    </div>
+  </section>
+
+  <section style="border-top:none;padding-top:8px">
+    <div class="band">
+      <div><h2>우리 그룹만의 교육 일정을 만들어 보세요.</h2><p>강좌를 담고 희망 일정을 보내주시면 담당자가 확인 후 연락드립니다.</p></div>
+      <a class="btn primary" href="#">단체 프로그램 구성 →</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>VLS Platform · 배움과 경험을 연결합니다.</span><span>주관 · 동서대학교 컴퓨터공학과</span></div>
+</footer>
+
+<script>
+  document.querySelectorAll('.chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('on'); });
+      chip.classList.add('on');
+      var f = chip.dataset.f;
+      document.querySelectorAll('.card').forEach(function(card){
+        card.classList.toggle('hidden', f !== 'all' && card.dataset.c !== f);
+      });
+    });
+  });
+</script>
+</body>
+</html>
