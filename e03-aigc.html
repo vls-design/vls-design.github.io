@@ -3,93 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>E-03 생성형 AI 이미지·영상</title>
+<title>VLS · E-03 생성형 AI 이미지·영상</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="vls.css">
 <style>
-  :root {
-    --bg: #f5f6f8;
-    --surface: #ffffff;
-    --ink: #121527;
-    --ink-2: #3c4152;
-    --muted: #8a8f9c;
-    --line: #e4e6ec;
-    --accent: #4b52d6;
-    --accent-soft: #eef0ff;
-    --chip: #f1f2f5;
-    --navy: #151a2e;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: "Pretendard", -apple-system, "Malgun Gothic", sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap { width: 1056px; margin: 0 auto; }
-
-  /* header */
-  header { background: var(--surface); border-bottom: 1px solid var(--line); }
-  header .wrap { height: 64px; display: flex; align-items: center; }
-  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; }
-  .logo i { width: 30px; height: 30px; border-radius: 7px; background: var(--ink); color: #fff;
-    display: grid; place-items: center; font-style: normal; font-size: 15px; }
-  nav { display: flex; gap: 30px; margin-left: 160px; font-size: 14px; font-weight: 600; color: var(--ink-2); }
-  nav span::after { content: "⌄"; font-size: 10px; margin-left: 4px; color: var(--muted); }
-  nav .on { color: var(--accent); }
-  .h-right { margin-left: auto; display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-2); }
-  .btn-dark { background: var(--ink); color: #fff; padding: 10px 14px; border-radius: 8px; font-weight: 700; }
-
-  .crumb { padding: 30px 0 0; font-size: 13px; color: var(--muted); }
-  .crumb b { color: var(--ink-2); font-weight: 500; }
-
-  /* hero */
-  .hero { display: grid; grid-template-columns: 1fr 452px; gap: 72px; padding: 46px 0 64px; }
-  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--accent); display: flex; align-items: center; gap: 8px; }
-  .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-  h1 { font-size: 46px; line-height: 1.28; font-weight: 800; letter-spacing: -.02em; margin: 18px 0 22px; }
-  h1 em { font-style: normal; color: var(--accent); }
-  .lead { font-size: 15.5px; line-height: 1.7; color: var(--ink-2); }
-  .tags { display: flex; gap: 8px; margin: 22px 0 30px; }
-  .tag { font-size: 12.5px; font-weight: 600; padding: 6px 10px; border-radius: 6px; background: var(--chip); color: var(--ink-2); }
-  .tag.a { background: var(--accent-soft); color: var(--accent); }
-  .ctas { display: flex; gap: 10px; }
-  .btn { height: 48px; padding: 0 20px; border-radius: 9px; font-weight: 700; font-size: 14.5px; display: inline-flex; align-items: center; gap: 8px; }
-  .btn.p { background: var(--accent); color: #fff; }
-  .btn.s { background: #fff; border: 1px solid var(--line); color: var(--ink); }
-  .note { margin-top: 18px; font-size: 12.5px; color: var(--muted); }
-
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
-  .plan { padding: 26px; box-shadow: 0 10px 30px rgba(20, 24, 50, .06); }
-  .plan-top { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
-  .plan-top b { color: var(--accent); }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); padding: 22px 0 20px; border-bottom: 1px solid var(--line); }
-  .stats strong { font-size: 25px; font-weight: 800; display: block; }
-  .stats span { font-size: 12px; color: var(--muted); }
-  .info { list-style: none; padding-top: 6px; }
-  .info li { display: flex; justify-content: space-between; padding: 13px 2px; border-bottom: 1px dashed var(--line); font-size: 13.5px; }
-  .info li:last-child { border: 0; }
-  .info span { color: var(--muted); }
-  .info b { font-weight: 600; text-align: right; }
-  .plan .btn { width: 100%; justify-content: center; margin-top: 14px; }
-
-  /* sections */
-  section { padding: 54px 0; border-top: 1px solid var(--line); }
-  .sh { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 26px; }
-  .sh h2 { font-size: 24px; font-weight: 800; letter-spacing: -.01em; }
-  .sh p { font-size: 13px; color: var(--muted); }
-
-  .gallery { display: grid; grid-template-columns: 1.35fr 1fr 1fr; grid-template-rows: 180px 180px; gap: 14px; }
-  .shot { border-radius: 14px; position: relative; overflow: hidden; color: #fff; }
-  .shot .cap { position: absolute; left: 14px; bottom: 12px; right: 14px; font-size: 12.5px; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,.35); }
-  .shot .cap small { display: block; font-size: 11px; font-weight: 500; opacity: .85; margin-top: 3px; }
-  .shot .lab { position: absolute; top: 12px; left: 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .06em;
-    background: rgba(255,255,255,.2); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 5px; }
-  .s1 { grid-row: span 2; background:
+  /* 결과물 갤러리 그림 (E-03 전용) */
+  .s1{background:
       radial-gradient(circle at 70% 30%, #ffcf6e 0 7%, transparent 8%),
       linear-gradient(180deg, transparent 55%, #0b0f2a 55%),
-      linear-gradient(180deg, #2a1b6e 0%, #c0398e 45%, #ff8a5c 62%);
-  }
-  .s1::before { content: ""; position: absolute; left: 0; right: 0; bottom: 45%; height: 70px;
+      linear-gradient(180deg, #2a1b6e 0%, #c0398e 45%, #ff8a5c 62%)}
+  .s1::before{content:"";position:absolute;left:0;right:0;bottom:45%;height:70px;
     background:
       linear-gradient(#0b0f2a,#0b0f2a) 6% 100%/30px 46px no-repeat,
       linear-gradient(#0b0f2a,#0b0f2a) 16% 100%/22px 64px no-repeat,
@@ -98,89 +21,68 @@
       linear-gradient(#0b0f2a,#0b0f2a) 52% 100%/40px 30px no-repeat,
       linear-gradient(#0b0f2a,#0b0f2a) 66% 100%/24px 58px no-repeat,
       linear-gradient(#0b0f2a,#0b0f2a) 80% 100%/36px 42px no-repeat,
-      linear-gradient(#0b0f2a,#0b0f2a) 94% 100%/20px 54px no-repeat; }
-  .s1::after { content: ""; position: absolute; left: 0; right: 0; top: 55%; height: 45%;
-    background: repeating-linear-gradient(180deg, rgba(255,140,190,.18) 0 2px, transparent 2px 9px); }
-  .s2 { background:
+      linear-gradient(#0b0f2a,#0b0f2a) 94% 100%/20px 54px no-repeat}
+  .s1::after{content:"";position:absolute;left:0;right:0;top:55%;height:45%;
+    background:repeating-linear-gradient(180deg, rgba(255,140,190,.18) 0 2px, transparent 2px 9px)}
+  .s2{background:
       radial-gradient(ellipse at 50% 120%, #f3e2c4 0 30%, transparent 31%),
-      linear-gradient(180deg, #8fd3f4 0%, #b7e3f0 48%, #4aa3c9 50%, #2d7fae 72%); }
-  .s3 { background:
+      linear-gradient(180deg, #8fd3f4 0%, #b7e3f0 48%, #4aa3c9 50%, #2d7fae 72%)}
+  .s3{background:
       repeating-linear-gradient(90deg, rgba(0,0,0,.06) 0 12px, transparent 12px 24px),
       repeating-linear-gradient(0deg, rgba(0,0,0,.06) 0 12px, transparent 12px 24px),
-      linear-gradient(135deg, #ff9fb2 0 25%, #ffd36e 25% 45%, #7fd1c7 45% 65%, #7d8cf2 65% 100%); }
-  .s4 { background: linear-gradient(135deg, #3b2f8f, #6a4cd8 55%, #e46ba5); }
-  .s5 { background: #0f1222; }
-  .s5 .play { position: absolute; inset: 0; display: grid; place-items: center; }
-  .s5 .play i { width: 54px; height: 54px; border-radius: 50%; background: rgba(255,255,255,.14); display: grid; place-items: center; }
-  .s5 .play i::after { content: ""; border-left: 16px solid #fff; border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 4px; }
-  .s5 .bar { position: absolute; left: 14px; right: 14px; bottom: 44px; height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; }
-  .s5 .bar::before { content: ""; position: absolute; inset: 0 62% 0 0; background: var(--accent); border-radius: 2px; }
-  .s5 .frames { position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; }
-  .s5 .frames b { width: 26px; height: 18px; border-radius: 3px; }
-  .prompt { position: absolute; left: 14px; right: 14px; top: 44px; font: 500 11.5px/1.5 ui-monospace, Consolas, monospace;
-    background: rgba(255,255,255,.14); padding: 9px 10px; border-radius: 8px; }
-
-  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-  .step { padding: 24px 22px; }
-  .step .t { font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--accent); }
-  .step h3 { font-size: 16.5px; font-weight: 800; margin: 12px 0 10px; }
-  .step p { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); min-height: 66px; }
-  .step .m { margin-top: 14px; font-size: 12px; color: var(--muted); }
-  .meter { height: 4px; background: var(--chip); border-radius: 2px; margin-top: 16px; overflow: hidden; }
-  .meter b { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
-
-  .learn { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .lc { padding: 26px 24px; }
-  .ic { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 800; font-size: 15px; }
-  .lc h3 { font-size: 16.5px; font-weight: 800; margin: 18px 0 8px; }
-  .lc p { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
-  .lc ul { list-style: none; margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .lc li { font-size: 12px; padding: 5px 9px; border-radius: 6px; background: var(--chip); color: var(--ink-2); }
-
-  .rel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-  .rc { padding: 22px 20px; }
-  .rc .k { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); letter-spacing: .04em; }
-  .rc h3 { font-size: 15.5px; font-weight: 800; margin: 14px 0 8px; }
-  .rc p { font-size: 13px; line-height: 1.55; color: var(--ink-2); }
-  .rc .tags { margin: 16px 0 0; }
-
-  .cta { background: var(--navy); color: #fff; border-radius: 18px; padding: 40px; display: flex; align-items: center; justify-content: space-between; margin: 6px 0 64px; }
-  .cta h2 { font-size: 22px; font-weight: 800; }
-  .cta p { font-size: 14px; color: #aab0c4; margin-top: 10px; }
-  footer { background: #fff; border-top: 1px solid var(--line); }
-  footer .wrap { height: 64px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--muted); }
+      linear-gradient(135deg, #ff9fb2 0 25%, #ffd36e 25% 45%, #7fd1c7 45% 65%, #7d8cf2 65% 100%)}
+  .s4{background:linear-gradient(135deg, #3b2f8f, #6a4cd8 55%, #e46ba5)}
+  .s4 .prompt{position:absolute;left:14px;right:14px;top:44px;font:500 11.5px/1.5 ui-monospace, Consolas, monospace;
+    background:rgba(255,255,255,.14);padding:9px 10px;border-radius:8px}
+  .s5{background:#0f1222}
+  .s5 .play{position:absolute;inset:0;display:grid;place-items:center}
+  .s5 .play i{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
+  .s5 .play i::after{content:"";border-left:16px solid #fff;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:4px}
+  .s5 .bar{position:absolute;left:14px;right:14px;bottom:44px;height:3px;background:rgba(255,255,255,.2);border-radius:2px}
+  .s5 .bar::before{content:"";position:absolute;inset:0 62% 0 0;background:var(--accent);border-radius:2px}
+  .s5 .frames{position:absolute;top:12px;right:12px;display:flex;gap:4px}
+  .s5 .frames b{width:26px;height:18px;border-radius:3px}
 </style>
 </head>
 <body>
-<header><div class="wrap">
-  <div class="logo"><i>V</i>VLS</div>
-  <nav><span class="on">프로그램 찾기</span><span>단체 프로그램 구성</span><span>기관·강사 참여</span><span>VLS 소개</span><span>고객지원</span></nav>
-  <div class="h-right"><span>KR</span><span>로그인</span><span class="btn-dark">회원가입</span></div>
-</div></header>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="index.html"><b>V</b>VLS</a>
+    <nav class="menu">
+      <a class="on" href="index.html">프로그램 찾기</a>
+      <a href="schedule.html">단체 프로그램 구성</a>
+      <a href="#">기관·강사 참여</a>
+      <a href="#">VLS 소개</a>
+      <a href="#">고객지원</a>
+    </nav>
+    <div class="util"><a href="#">KR</a><a href="#">로그인</a><a class="btn-dark" href="#">회원가입</a></div>
+  </div>
+</header>
 
 <main class="wrap">
-  <div class="crumb">홈 › 프로그램 찾기 › 01 / EDUCATION › <b>E-03 / AIGC</b></div>
+  <div class="crumb">홈 › 프로그램 찾기 › <a href="index.html">01 / EDUCATION</a> › <span>E-03 / AIGC</span></div>
 
   <div class="hero">
     <div>
-      <div class="eyebrow">E-03 / AIGC · PROMPT·IMAGE·VIDEO</div>
+      <div class="eyebrow">E-03 / AIGC · Prompt·Image·Video</div>
       <h1>생성형 AI로 만드는<br><em>이미지·영상.</em></h1>
       <p class="lead">프롬프트 설계부터 짧은 영상 완성까지 실습합니다.<br>
         문장 한 줄로 부산의 장면을 이미지로 그리고, 그 이미지를 이어<br>나만의 15초 숏폼 영상으로 완성해 봅니다.</p>
-      <div class="tags"><span class="tag a">실습</span><span class="tag">3시간</span><span class="tag">AIGC</span><span class="tag">중학생 이상</span></div>
-      <div class="ctas">
-        <span class="btn p">내 코스에 담기 +</span>
-        <span class="btn s">단체 신청 방법 →</span>
+      <div class="pills" style="margin:-8px 0 26px"><span class="pill a">실습</span><span class="pill">3시간</span><span class="pill">AIGC</span><span class="pill">중학생 이상</span></div>
+      <div class="cta">
+        <a class="btn primary" href="schedule.html">내 코스에 담기 +</a>
+        <a class="btn" href="index.html#steps">단체 신청 방법 →</a>
       </div>
-      <p class="note">1인 1PC 실습 · 결과물은 수업 후 파일로 제공 · 한국어/중국어 진행</p>
+      <div class="meta">1인 1PC 실습 · 결과물은 수업 후 파일로 제공 · 한국어/중국어 진행</div>
     </div>
 
-    <div class="card plan">
-      <div class="plan-top"><span>COURSE INFO</span><b>E-03</b></div>
+    <aside class="panel">
+      <div class="panel-top"><span>Course Info</span><b>E-03</b></div>
       <div class="stats">
-        <div><strong>3h</strong><span>강좌 소요</span></div>
-        <div><strong>30명</strong><span>최대 정원</span></div>
-        <div><strong>2종</strong><span>결과물 (이미지·영상)</span></div>
+        <div><strong>3h</strong>강좌 소요</div>
+        <div><strong>30명</strong>최대 정원</div>
+        <div><strong>2종</strong>결과물 (이미지·영상)</div>
       </div>
       <ul class="info">
         <li><span>대상</span><b>중·고 단체 · 대학생 교류단 · 일반 그룹</b></li>
@@ -188,14 +90,14 @@
         <li><span>준비물</span><b>없음 (실습 PC 제공)</b></li>
         <li><span>진행</span><b>교수 1 · 실습 조교 2</b></li>
       </ul>
-      <span class="btn p">코스 플랜에 추가</span>
-    </div>
+      <a class="btn primary block" href="schedule.html">코스 플랜에 추가</a>
+    </aside>
   </div>
 
   <section>
-    <div class="sh"><h2>이런 결과물을 만듭니다</h2><p>지난 수업 참가자 작품 예시</p></div>
+    <div class="sec-head"><h2>이런 결과물을 만듭니다</h2><p>지난 수업 참가자 작품 예시</p></div>
     <div class="gallery">
-      <div class="shot s1"><span class="lab">IMAGE</span>
+      <div class="shot tall s1"><span class="lab">IMAGE</span>
         <div class="cap">광안대교 야경 · 네온 시티 스타일<small>"부산 광안대교, 밤, 네온 조명, 시네마틱"</small></div></div>
       <div class="shot s2"><span class="lab">IMAGE</span><div class="cap">해운대 여름 · 수채화</div></div>
       <div class="shot s3"><span class="lab">IMAGE</span><div class="cap">감천문화마을 · 픽셀아트</div></div>
@@ -210,59 +112,58 @@
   </section>
 
   <section>
-    <div class="sh"><h2>수업은 이렇게 진행됩니다</h2><p>총 180분 · 이론 30분 + 실습 150분</p></div>
-    <div class="flow">
-      <div class="card step"><div class="t">0:00 – 0:30</div><h3>생성형 AI 이해하기</h3>
+    <div class="sec-head"><h2>수업은 이렇게 진행됩니다</h2><p>총 180분 · 이론 30분 + 실습 150분</p></div>
+    <div class="steps">
+      <div class="step"><b>0:00 – 0:30</b><h3>생성형 AI 이해하기</h3>
         <p>이미지·영상 생성 모델의 원리와 저작권·윤리 기준을 짧게 살펴봅니다.</p>
-        <div class="meter"><b style="width:17%"></b></div><div class="m">이론 · 30분</div></div>
-      <div class="card step"><div class="t">0:30 – 1:20</div><h3>프롬프트 설계 실습</h3>
+        <div class="meter"><i style="width:17%"></i></div><small>이론 · 30분</small></div>
+      <div class="step"><b>0:30 – 1:20</b><h3>프롬프트 설계 실습</h3>
         <p>주제·스타일·구도를 나눠 쓰는 프롬프트 카드로 원하는 장면을 만듭니다.</p>
-        <div class="meter"><b style="width:28%"></b></div><div class="m">실습 · 50분</div></div>
-      <div class="card step"><div class="t">1:20 – 2:30</div><h3>이미지에서 영상으로</h3>
+        <div class="meter"><i style="width:28%"></i></div><small>실습 · 50분</small></div>
+      <div class="step"><b>1:20 – 2:30</b><h3>이미지에서 영상으로</h3>
         <p>만든 이미지를 움직이는 컷으로 바꾸고, 자막·음악을 더해 15초로 편집합니다.</p>
-        <div class="meter"><b style="width:39%"></b></div><div class="m">실습 · 70분</div></div>
-      <div class="card step"><div class="t">2:30 – 3:00</div><h3>상영회 · 피드백</h3>
+        <div class="meter"><i style="width:39%"></i></div><small>실습 · 70분</small></div>
+      <div class="step"><b>2:30 – 3:00</b><h3>상영회 · 피드백</h3>
         <p>조별 작품을 함께 보고 강사 피드백을 받은 뒤 결과물을 내려받습니다.</p>
-        <div class="meter"><b style="width:16%"></b></div><div class="m">발표 · 30분</div></div>
+        <div class="meter"><i style="width:16%"></i></div><small>발표 · 30분</small></div>
     </div>
   </section>
 
   <section>
-    <div class="sh"><h2>배우는 것</h2><p>도구보다 원리를, 결과보다 과정을</p></div>
+    <div class="sec-head"><h2>배우는 것</h2><p>도구보다 원리를, 결과보다 과정을</p></div>
     <div class="learn">
-      <div class="card lc"><div class="ic">01</div><h3>프롬프트 설계</h3>
+      <div class="surface"><div class="ic">01</div><h3>프롬프트 설계</h3>
         <p>원하는 결과를 말로 정확히 설명하는 법. 주제·스타일·구도·조명을 나눠 씁니다.</p>
-        <ul><li>프롬프트 구조</li><li>스타일 키워드</li><li>네거티브 프롬프트</li></ul></div>
-      <div class="card lc"><div class="ic">02</div><h3>이미지 생성·편집</h3>
+        <div class="pills"><span class="pill">프롬프트 구조</span><span class="pill">스타일 키워드</span><span class="pill">네거티브 프롬프트</span></div></div>
+      <div class="surface"><div class="ic">02</div><h3>이미지 생성·편집</h3>
         <p>같은 장면을 여러 스타일로 변주하고, 부분 수정으로 완성도를 높입니다.</p>
-        <ul><li>텍스트→이미지</li><li>부분 수정</li><li>캐릭터 일관성</li></ul></div>
-      <div class="card lc"><div class="ic">03</div><h3>영상 생성·편집</h3>
+        <div class="pills"><span class="pill">텍스트→이미지</span><span class="pill">부분 수정</span><span class="pill">캐릭터 일관성</span></div></div>
+      <div class="surface"><div class="ic">03</div><h3>영상 생성·편집</h3>
         <p>정지 이미지에 움직임을 주고, 컷을 이어 짧은 이야기로 만듭니다.</p>
-        <ul><li>이미지→영상</li><li>컷 편집</li><li>자막·음악</li></ul></div>
+        <div class="pills"><span class="pill">이미지→영상</span><span class="pill">컷 편집</span><span class="pill">자막·음악</span></div></div>
     </div>
   </section>
 
   <section>
-    <div class="sh"><h2>함께 담으면 좋은 강좌</h2><p>E-03과 이어 들으면 하루 일정이 완성됩니다.</p></div>
-    <div class="rel">
-      <div class="card rc"><div class="k"><span>E-01 / AI</span><span>↗</span></div><h3>AI 기초와 생활 속 인공지능</h3>
-        <p>일상 속 AI 사례로 원리를 이해하고 직접 체험합니다.</p><div class="tags"><span class="tag a">이론+체험</span><span class="tag">2시간</span></div></div>
-      <div class="card rc"><div class="k"><span>E-04 / AIGC</span><span>↗</span></div><h3>AI 챗봇·콘텐츠 제작 워크숍</h3>
-        <p>주제를 정해 대화형 챗봇과 소개 콘텐츠를 만듭니다.</p><div class="tags"><span class="tag a">실습</span><span class="tag">2시간</span></div></div>
-      <div class="card rc"><div class="k"><span>E-07 / CONTENT</span><span>↗</span></div><h3>영상 콘텐츠 기획 및 제작</h3>
-        <p>부산 여행 브이로그를 기획·촬영·편집합니다.</p><div class="tags"><span class="tag a">실습</span><span class="tag">3시간</span></div></div>
-      <div class="card rc"><div class="k"><span>02 / HERITAGE</span><span>↗</span></div><h3>부산 전통문화 체험</h3>
-        <p>오전 E-03 + 오후 한복·다도 체험으로 하루를 구성합니다.</p><div class="tags"><span class="tag a">문화</span><span class="tag">반나절</span></div></div>
+    <div class="sec-head"><h2>함께 담으면 좋은 강좌</h2><p>E-03과 이어 들으면 하루 일정이 완성됩니다.</p></div>
+    <div class="grid">
+      <a class="card" href="index.html#courses"><div class="tag"><span>E-01 / AI</span><span>↗</span></div><h3>AI 기초와 생활 속 인공지능</h3><p>일상 속 AI 사례로 원리를 이해하고 직접 체험합니다.</p><div class="foot"><span class="pill a">이론+체험</span><span class="pill">2시간</span></div></a>
+      <a class="card" href="index.html#courses"><div class="tag"><span>E-04 / AIGC</span><span>↗</span></div><h3>AI 챗봇·콘텐츠 제작 워크숍</h3><p>주제를 정해 대화형 챗봇과 소개 콘텐츠를 만듭니다.</p><div class="foot"><span class="pill a">실습</span><span class="pill">2시간</span></div></a>
+      <a class="card" href="index.html#courses"><div class="tag"><span>E-07 / Content</span><span>↗</span></div><h3>영상 콘텐츠 기획 및 제작</h3><p>부산 여행 브이로그를 기획·촬영·편집합니다.</p><div class="foot"><span class="pill a">실습</span><span class="pill">3시간</span></div></a>
+      <a class="card" href="heritage.html"><div class="tag"><span>02 / Heritage</span><span>↗</span></div><h3>부산 전통문화 체험</h3><p>오전 E-03 + 오후 한복·다도 체험으로 하루를 구성합니다.</p><div class="foot"><span class="pill a">문화</span><span class="pill">반나절</span></div></a>
     </div>
   </section>
 
-  <div class="cta">
-    <div><h2>이 강좌로 우리 그룹 일정을 시작해 보세요.</h2>
-      <p>E-03을 담고 희망 일정을 보내주시면 담당자가 확인 후 연락드립니다.</p></div>
-    <span class="btn p">단체 프로그램 구성 →</span>
-  </div>
+  <section style="border-top:none;padding-top:8px">
+    <div class="band">
+      <div><h2>이 강좌로 우리 그룹 일정을 시작해 보세요.</h2><p>E-03을 담고 희망 일정을 보내주시면 담당자가 확인 후 연락드립니다.</p></div>
+      <a class="btn primary" href="schedule.html">단체 프로그램 구성 →</a>
+    </div>
+  </section>
 </main>
 
-<footer><div class="wrap"><span>VLS Platform · 배움과 경험을 연결합니다.</span><span>주관 · 동서대학교 컴퓨터공학과</span></div></footer>
+<footer>
+  <div class="wrap"><span>VLS Platform · 배움과 경험을 연결합니다.</span><span>주관 · 동서대학교 컴퓨터공학과</span></div>
+</footer>
 </body>
 </html>
