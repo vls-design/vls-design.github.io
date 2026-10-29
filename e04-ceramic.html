@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-04 도자공예 체험</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --ink: #121527;
+    --ink-2: #3c4152;
+    --muted: #8a8f9c;
+    --line: #e4e6ec;
+    --accent: #4b52d6;
+    --accent-soft: #eef0ff;
+    --chip: #f1f2f5;
+    --navy: #151a2e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Pretendard", -apple-system, "Malgun Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: 1056px; margin: 0 auto; }
+
+  /* header */
+  header { background: var(--surface); border-bottom: 1px solid var(--line); }
+  header .wrap { height: 64px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; }
+  .logo i { width: 30px; height: 30px; border-radius: 7px; background: var(--ink); color: #fff;
+    display: grid; place-items: center; font-style: normal; font-size: 15px; }
+  nav { display: flex; gap: 30px; margin-left: 160px; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+  nav span::after { content: "⌄"; font-size: 10px; margin-left: 4px; color: var(--muted); }
+  nav .on { color: var(--accent); }
+  .h-right { margin-left: auto; display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-2); }
+  .btn-dark { background: var(--ink); color: #fff; padding: 10px 14px; border-radius: 8px; font-weight: 700; }
+
+  .crumb { padding: 30px 0 0; font-size: 13px; color: var(--muted); }
+  .crumb b { color: var(--ink-2); font-weight: 500; }
+
+  /* hero */
+  .hero { display: grid; grid-template-columns: 1fr 452px; gap: 72px; padding: 46px 0 64px; }
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+  .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  h1 { font-size: 46px; line-height: 1.28; font-weight: 800; letter-spacing: -.02em; margin: 18px 0 22px; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { font-size: 15.5px; line-height: 1.7; color: var(--ink-2); }
+  .tags { display: flex; gap: 8px; margin: 22px 0 30px; }
+  .tag { font-size: 12.5px; font-weight: 600; padding: 6px 10px; border-radius: 6px; background: var(--chip); color: var(--ink-2); }
+  .tag.a { background: var(--accent-soft); color: var(--accent); }
+  .ctas { display: flex; gap: 10px; }
+  .btn { height: 48px; padding: 0 20px; border-radius: 9px; font-weight: 700; font-size: 14.5px; display: inline-flex; align-items: center; gap: 8px; }
+  .btn.p { background: var(--accent); color: #fff; }
+  .btn.s { background: #fff; border: 1px solid var(--line); color: var(--ink); }
+  .note { margin-top: 18px; font-size: 12.5px; color: var(--muted); }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+  .plan { padding: 26px; box-shadow: 0 10px 30px rgba(20, 24, 50, .06); }
+  .plan-top { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+  .plan-top b { color: var(--accent); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); padding: 22px 0 20px; border-bottom: 1px solid var(--line); }
+  .stats strong { font-size: 25px; font-weight: 800; display: block; }
+  .stats span { font-size: 12px; color: var(--muted); }
+  .info { list-style: none; padding-top: 6px; }
+  .info li { display: flex; justify-content: space-between; padding: 13px 2px; border-bottom: 1px dashed var(--line); font-size: 13.5px; }
+  .info li:last-child { border: 0; }
+  .info span { color: var(--muted); }
+  .info b { font-weight: 600; text-align: right; }
+  .plan .btn { width: 100%; justify-content: center; margin-top: 14px; }
+
+  /* sections */
+  section { padding: 54px 0; border-top: 1px solid var(--line); }
+  .sh { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 26px; }
+  .sh h2 { font-size: 24px; font-weight: 800; letter-spacing: -.01em; }
+  .sh p { font-size: 13px; color: var(--muted); }
+
+  .gallery { display: grid; grid-template-columns: 1.35fr 1fr 1fr; grid-template-rows: 180px 180px; gap: 14px; }
+  .shot { border-radius: 14px; position: relative; overflow: hidden; color: #fff; }
+  .shot .cap { position: absolute; left: 14px; bottom: 12px; right: 14px; font-size: 12.5px; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,.35); }
+  .shot .cap small { display: block; font-size: 11px; font-weight: 500; opacity: .85; margin-top: 3px; }
+  .shot .lab { position: absolute; top: 12px; left: 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .06em;
+    background: rgba(255,255,255,.2); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 5px; }
+  .s1 { grid-row: span 2; background:
+      radial-gradient(circle at 70% 30%, #ffcf6e 0 7%, transparent 8%),
+      linear-gradient(180deg, transparent 55%, #0b0f2a 55%),
+      linear-gradient(180deg, #2a1b6e 0%, #c0398e 45%, #ff8a5c 62%);
+  }
+  .s1::before { content: ""; position: absolute; left: 0; right: 0; bottom: 45%; height: 70px;
+    background:
+      linear-gradient(#0b0f2a,#0b0f2a) 6% 100%/30px 46px no-repeat,
+      linear-gradient(#0b0f2a,#0b0f2a) 16% 100%/22px 64px no-repeat,
+      linear-gradient(#0b0f2a,#0b0f2a) 27% 100%/34px 38px no-repeat,
+      linear-gradient(#0b0f2a,#0b0f2a) 40% 100%/18px 70px no-repeat,
+      linear-gradient(#0b0f2a,#0b0f2a) 52% 100%/40px 30px no-repeat,
+      linear-gradient(#0b0f2a,#0b0f2a) 66% 100%/24px 58px no-repeat,
+      linear-gradient(#0b0f2a,#0b0f2a) 80% 100%/36px 42px no-repeat,
+      linear-gradient(#0b0f2a,#0b0f2a) 94% 100%/20px 54px no-repeat; }
+  .s1::after { content: ""; position: absolute; left: 0; right: 0; top: 55%; height: 45%;
+    background: repeating-linear-gradient(180deg, rgba(255,140,190,.18) 0 2px, transparent 2px 9px); }
+  .s2 { background:
+      radial-gradient(ellipse at 50% 120%, #f3e2c4 0 30%, transparent 31%),
+      linear-gradient(180deg, #8fd3f4 0%, #b7e3f0 48%, #4aa3c9 50%, #2d7fae 72%); }
+  .s3 { background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,.06) 0 12px, transparent 12px 24px),
+      repeating-linear-gradient(0deg, rgba(0,0,0,.06) 0 12px, transparent 12px 24px),
+      linear-gradient(135deg, #ff9fb2 0 25%, #ffd36e 25% 45%, #7fd1c7 45% 65%, #7d8cf2 65% 100%); }
+  .s4 { background: linear-gradient(135deg, #3b2f8f, #6a4cd8 55%, #e46ba5); }
+  .s5 { background: #0f1222; }
+  .s5 .play { position: absolute; inset: 0; display: grid; place-items: center; }
+  .s5 .play i { width: 54px; height: 54px; border-radius: 50%; background: rgba(255,255,255,.14); display: grid; place-items: center; }
+  .s5 .play i::after { content: ""; border-left: 16px solid #fff; border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 4px; }
+  .s5 .bar { position: absolute; left: 14px; right: 14px; bottom: 44px; height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; }
+  .s5 .bar::before { content: ""; position: absolute; inset: 0 62% 0 0; background: var(--accent); border-radius: 2px; }
+  .s5 .frames { position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; }
+  .s5 .frames b { width: 26px; height: 18px; border-radius: 3px; }
+  .prompt { position: absolute; left: 14px; right: 14px; top: 44px; font: 500 11.5px/1.5 ui-monospace, Consolas, monospace;
+    background: rgba(255,255,255,.14); padding: 9px 10px; border-radius: 8px; }
+
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .step { padding: 24px 22px; }
+  .step .t { font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--accent); }
+  .step h3 { font-size: 16.5px; font-weight: 800; margin: 12px 0 10px; }
+  .step p { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); min-height: 66px; }
+  .step .m { margin-top: 14px; font-size: 12px; color: var(--muted); }
+  .meter { height: 4px; background: var(--chip); border-radius: 2px; margin-top: 16px; overflow: hidden; }
+  .meter b { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+
+  .learn { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .lc { padding: 26px 24px; }
+  .ic { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+  .lc h3 { font-size: 16.5px; font-weight: 800; margin: 18px 0 8px; }
+  .lc p { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
+  .lc ul { list-style: none; margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .lc li { font-size: 12px; padding: 5px 9px; border-radius: 6px; background: var(--chip); color: var(--ink-2); }
+
+  .rel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .rc { padding: 22px 20px; }
+  .rc .k { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+  .rc h3 { font-size: 15.5px; font-weight: 800; margin: 14px 0 8px; }
+  .rc p { font-size: 13px; line-height: 1.55; color: var(--ink-2); }
+  .rc .tags { margin: 16px 0 0; }
+
+  .cta { background: var(--navy); color: #fff; border-radius: 18px; padding: 40px; display: flex; align-items: center; justify-content: space-between; margin: 6px 0 64px; }
+  .cta h2 { font-size: 22px; font-weight: 800; }
+  .cta p { font-size: 14px; color: #aab0c4; margin-top: 10px; }
+  footer { background: #fff; border-top: 1px solid var(--line); }
+  footer .wrap { height: 64px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--muted); }
+
+  /* ceramic gallery */
+  .c1 { grid-row: span 2; background: radial-gradient(ellipse at 50% 40%, #efe6d6 0%, #d9cbb3 70%, #c8b79c 100%); }
+  .jar { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); width: 210px; height: 200px; }
+  .jar::before { content: ""; position: absolute; left: 70px; top: 0; width: 70px; height: 18px; border-radius: 6px 6px 2px 2px;
+    background: linear-gradient(90deg, #e9e2d3, #fbf8f1 45%, #ddd3c0); }
+  .jar::after { content: ""; position: absolute; left: 0; top: 12px; width: 210px; height: 188px; border-radius: 50% 50% 46% 46% / 52% 52% 48% 48%;
+    background: radial-gradient(circle at 36% 32%, #ffffff 0%, #f7f2e8 28%, #e8dfcd 62%, #cbbfa6 100%);
+    box-shadow: 0 26px 30px -12px rgba(70, 50, 20, .35); }
+  .c2 { background: radial-gradient(circle at 30% 30%, #c9e0d2 0%, #9fc2ad 45%, #6f9b86 100%); }
+  .c2 .crack { position: absolute; inset: 0; opacity: .35;
+    background:
+      linear-gradient(28deg, transparent 49.4%, #4f7564 49.6% 50.2%, transparent 50.4%) 0 0/90px 70px,
+      linear-gradient(-62deg, transparent 49.4%, #4f7564 49.6% 50.2%, transparent 50.4%) 0 0/120px 80px; }
+  .c3 { background: #3b3330; }
+  .bowls { position: absolute; left: 0; right: 0; top: 58px; display: flex; justify-content: center; gap: 12px; }
+  .bowls b { width: 78px; height: 46px; border-radius: 0 0 40px 40px / 0 0 46px 46px; position: relative;
+    background: linear-gradient(180deg, #8a6e5a 0 40%, #6b5444 100%); }
+  .bowls b::before { content: ""; position: absolute; left: 0; right: 0; top: -6px; height: 12px; border-radius: 50%; background: #e8e0d2; }
+  .bowls b::after { content: ""; position: absolute; left: 8px; right: 8px; top: 14px; height: 14px;
+    background: repeating-linear-gradient(90deg, #efe7da 0 3px, transparent 3px 7px); opacity: .8; border-radius: 4px; }
+  .c4 { background: linear-gradient(160deg, #8a5a3c, #5a3a28); }
+  .steps-mini { position: absolute; left: 14px; right: 14px; top: 46px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .steps-mini span { background: rgba(255,255,255,.14); border-radius: 8px; padding: 10px 0; text-align: center; font-size: 11.5px; font-weight: 600; }
+  .steps-mini span i { display: block; font-style: normal; font-size: 18px; margin-bottom: 4px; }
+  .c5 { background: #f3ede4; color: var(--ink); }
+  .c5 .cap { text-shadow: none; }
+  .c5 .lab { background: var(--ink); color: #fff; }
+  .kiln { position: absolute; left: 14px; right: 14px; top: 46px; }
+  .kiln .row { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-2); padding: 6px 0; border-bottom: 1px dashed #d9cfbf; }
+  .kiln .row b { color: var(--ink); }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="logo"><i>V</i>VLS</div>
+  <nav><span class="on">프로그램 찾기</span><span>단체 프로그램 구성</span><span>기관·강사 참여</span><span>VLS 소개</span><span>고객지원</span></nav>
+  <div class="h-right"><span>KR</span><span>로그인</span><span class="btn-dark">회원가입</span></div>
+</div></header>
+
+<main class="wrap">
+  <div class="crumb">홈 › 프로그램 찾기 › 02 / HERITAGE › <b>E-04 / CERAMIC</b></div>
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow">E-04 / CERAMIC · CLAY·FORM·GLAZE</div>
+      <h1>흙을 빚어 만드는<br><em>나만의 도자기.</em></h1>
+      <p class="lead">도예 장인과 함께 흙을 만지고 빚어 보는 도자공예 체험입니다.<br>
+        손으로 그릇을 성형하고 우리 전통 문양을 새겨,<br>가마에서 구워 낸 나만의 작품을 집으로 받아 봅니다.</p>
+      <div class="tags"><span class="tag a">공예</span><span class="tag">3시간</span><span class="tag">CRAFT</span><span class="tag">초등학생 이상</span></div>
+      <div class="ctas">
+        <span class="btn p">내 일정에 담기 +</span>
+        <span class="btn s">단체 신청 방법 →</span>
+      </div>
+      <p class="note">1인 1작품 · 소성 후 약 4주 뒤 배송 · 한국어/중국어 안내</p>
+    </div>
+
+    <div class="card plan">
+      <div class="plan-top"><span>PROGRAM INFO</span><b>E-04</b></div>
+      <div class="stats">
+        <div><strong>3h</strong><span>체험 소요</span></div>
+        <div><strong>20명</strong><span>최대 정원</span></div>
+        <div><strong>1점</strong><span>완성 작품 (그릇·컵)</span></div>
+      </div>
+      <ul class="info">
+        <li><span>대상</span><b>초·중·고 단체 · 대학생 교류단 · 일반 그룹</b></li>
+        <li><span>장소</span><b>부산 협력 도예 공방</b></li>
+        <li><span>준비물</span><b>없음 (앞치마·도구 제공)</b></li>
+        <li><span>진행</span><b>도예 장인 1 · 보조 강사 2</b></li>
+      </ul>
+      <span class="btn p">코스 플랜에 추가</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="sh"><h2>이런 작품을 만듭니다</h2><p>지난 체험 참가자 작품 예시</p></div>
+    <div class="gallery">
+      <div class="shot c1"><span class="lab">WORK</span><div class="jar"></div>
+        <div class="cap" style="color:#3a2f22;text-shadow:none">작은 달항아리 · 백자 유약<small>코일링 기법으로 쌓아 올린 둥근 형태</small></div></div>
+      <div class="shot c2"><div class="crack"></div><span class="lab">GLAZE</span><div class="cap">청자 유약 · 빙렬 표현</div></div>
+      <div class="shot c3"><span class="lab">WORK</span><div class="bowls"><b></b><b></b><b></b></div><div class="cap">분청 찻사발 · 귀얄 문양</div></div>
+      <div class="shot c4"><span class="lab">PROCESS</span>
+        <div class="steps-mini"><span><i>◍</i>꼬박밀기</span><span><i>◎</i>성형</span><span><i>✎</i>문양</span><span><i>▲</i>시유</span></div>
+        <div class="cap">흙 준비부터 유약까지 직접</div></div>
+      <div class="shot c5"><span class="lab">DELIVERY</span>
+        <div class="kiln">
+          <div class="row"><span>초벌 소성</span><b>800℃ · 1주</b></div>
+          <div class="row"><span>재벌 소성</span><b>1,250℃ · 2주</b></div>
+          <div class="row"><span>포장·배송</span><b>약 4주 후</b></div>
+        </div>
+        <div class="cap">가마 소성 후 완성품 배송</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sh"><h2>체험은 이렇게 진행됩니다</h2><p>총 180분 · 설명 20분 + 실습 160분</p></div>
+    <div class="flow">
+      <div class="card step"><div class="t">0:00 – 0:20</div><h3>흙과 도자기 이해하기</h3>
+        <p>청자·백자·분청의 차이와 부산 도자 문화를 실물 작품으로 살펴봅니다.</p>
+        <div class="meter"><b style="width:11%"></b></div><div class="m">설명 · 20분</div></div>
+      <div class="card step"><div class="t">0:20 – 1:30</div><h3>그릇 성형하기</h3>
+        <p>꼬박밀기로 흙을 준비하고, 코일링·판 성형으로 그릇 형태를 빚습니다.</p>
+        <div class="meter"><b style="width:39%"></b></div><div class="m">실습 · 70분</div></div>
+      <div class="card step"><div class="t">1:30 – 2:30</div><h3>문양 새기기</h3>
+        <p>상감·귀얄·그림 기법 중 하나를 골라 전통 문양이나 이름을 새깁니다.</p>
+        <div class="meter"><b style="width:33%"></b></div><div class="m">실습 · 60분</div></div>
+      <div class="card step"><div class="t">2:30 – 3:00</div><h3>유약 고르기 · 마무리</h3>
+        <p>유약 색을 고르고 작품 바닥에 이름을 남긴 뒤 소성을 접수합니다.</p>
+        <div class="meter"><b style="width:17%"></b></div><div class="m">실습 · 30분</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sh"><h2>배우는 것</h2><p>손으로 만들며 전통을 이해합니다</p></div>
+    <div class="learn">
+      <div class="card lc"><div class="ic">01</div><h3>흙 다루기 · 성형</h3>
+        <p>흙의 성질을 이해하고, 손으로 형태를 쌓아 올리는 기본 성형법을 익힙니다.</p>
+        <ul><li>꼬박밀기</li><li>코일링</li><li>판 성형</li></ul></div>
+      <div class="card lc"><div class="ic">02</div><h3>전통 문양 장식</h3>
+        <p>우리 도자기에 담긴 문양의 의미를 알고, 나만의 방식으로 표현합니다.</p>
+        <ul><li>상감</li><li>귀얄</li><li>철화 그림</li></ul></div>
+      <div class="card lc"><div class="ic">03</div><h3>유약과 소성</h3>
+        <p>유약과 가마의 온도가 색과 질감을 어떻게 바꾸는지 살펴봅니다.</p>
+        <ul><li>청자·백자 유약</li><li>초벌·재벌</li><li>빙렬</li></ul></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sh"><h2>함께 담으면 좋은 프로그램</h2><p>E-04와 이어 체험하면 하루 일정이 완성됩니다.</p></div>
+    <div class="rel">
+      <div class="card rc"><div class="k"><span>H-04 / CRAFT</span><span>↗</span></div><h3>나전칠기 소품 공방</h3>
+        <p>자개를 붙여 거울·명함꽂이 같은 소품을 완성합니다.</p><div class="tags"><span class="tag a">공예</span><span class="tag">3시간</span></div></div>
+      <div class="card rc"><div class="k"><span>H-05 / CRAFT</span><span>↗</span></div><h3>한지·전통 매듭 공예</h3>
+        <p>한지 조명이나 매듭 키링을 장인과 함께 만듭니다.</p><div class="tags"><span class="tag a">공예</span><span class="tag">2시간</span></div></div>
+      <div class="card rc"><div class="k"><span>H-01 / LIFE</span><span>↗</span></div><h3>부산 전통문화 체험(한복·다도)</h3>
+        <p>직접 만든 찻사발 이야기와 함께 다도 예절을 배웁니다.</p><div class="tags"><span class="tag a">체험</span><span class="tag">2시간</span></div></div>
+      <div class="card rc"><div class="k"><span>E-03 / AIGC</span><span>↗</span></div><h3>생성형 AI로 만드는 이미지·영상</h3>
+        <p>오전 AI로 문양 디자인 + 오후 도자기에 새기기로 구성합니다.</p><div class="tags"><span class="tag a">실습</span><span class="tag">3시간</span></div></div>
+    </div>
+  </section>
+
+  <div class="cta">
+    <div><h2>이 체험으로 우리 그룹 일정을 시작해 보세요.</h2>
+      <p>E-04를 담고 희망 일정을 보내주시면 담당자가 공방 예약을 확인 후 연락드립니다.</p></div>
+    <span class="btn p">단체 프로그램 구성 →</span>
+  </div>
+</main>
+
+<footer><div class="wrap"><span>VLS Platform · 배움과 경험을 연결합니다.</span><span>주관 · 동서대학교 컴퓨터공학과</span></div></footer>
+</body>
+</html>
