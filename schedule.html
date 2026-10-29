@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VLS 시간표 만들기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --ink: #121527;
+    --ink-2: #3c4152;
+    --muted: #8a8f9c;
+    --line: #e4e6ec;
+    --accent: #4b52d6;
+    --accent-soft: #eef0ff;
+    --chip: #f1f2f5;
+    --navy: #151a2e;
+    /* category colors */
+    --edu: #4b52d6;     --edu-bg: #eef0ff;
+    --her: #b06a3b;     --her-bg: #f8efe7;
+    --cam: #1f8a78;     --cam-bg: #e6f4f1;
+    --ind: #4a5a78;     --ind-bg: #eceff5;
+    --com: #8a8f9c;     --com-bg: #f1f2f5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Pretendard", -apple-system, "Malgun Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { width: 1200px; max-width: calc(100% - 32px); margin: 0 auto; }
+
+  /* header */
+  header { background: var(--surface); border-bottom: 1px solid var(--line); }
+  header .wrap { height: 64px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; }
+  .logo i { width: 30px; height: 30px; border-radius: 7px; background: var(--ink); color: #fff;
+    display: grid; place-items: center; font-style: normal; font-size: 15px; }
+  nav { display: flex; gap: 30px; margin-left: 160px; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+  nav span::after { content: "⌄"; font-size: 10px; margin-left: 4px; color: var(--muted); }
+  nav .on { color: var(--accent); }
+  .h-right { margin-left: auto; display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-2); }
+  .btn-dark { background: var(--ink); color: #fff; padding: 10px 14px; border-radius: 8px; font-weight: 700; }
+
+  .crumb { padding: 30px 0 0; font-size: 13px; color: var(--muted); }
+  .crumb b { color: var(--ink-2); font-weight: 500; }
+
+  /* hero */
+  .hero { display: grid; grid-template-columns: 1fr 452px; gap: 72px; padding: 40px 0 48px; align-items: center; }
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+  .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  h1 { font-size: 42px; line-height: 1.28; font-weight: 800; letter-spacing: -.02em; margin: 16px 0 18px; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { font-size: 15.5px; line-height: 1.7; color: var(--ink-2); }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+  .plan { padding: 24px 26px; box-shadow: 0 10px 30px rgba(20, 24, 50, .06); }
+  .plan-top { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+  .plan-top b { color: var(--accent); }
+  .group { margin-top: 14px; font-size: 15px; font-weight: 800; }
+  .group span { display: block; font-size: 12.5px; font-weight: 500; color: var(--muted); margin-top: 4px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); padding: 18px 0 16px; border-bottom: 1px solid var(--line); }
+  .stats strong { font-size: 24px; font-weight: 800; display: block; }
+  .stats span { font-size: 12px; color: var(--muted); }
+  .mix { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 16px; background: var(--chip); }
+  .mix b { display: block; height: 100%; transition: width .25s; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 12px; color: var(--ink-2); }
+  .legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; background: var(--c); }
+
+  /* builder */
+  .builder { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; padding-bottom: 56px; }
+  .builder > div { min-width: 0; }
+  .side { padding: 20px; position: sticky; top: 16px; }
+  .side h2, .board-head h2 { font-size: 17px; font-weight: 800; }
+  .side p.hint { font-size: 12.5px; color: var(--muted); margin: 6px 0 14px; line-height: 1.5; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .chip { padding: 6px 11px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+  .chip.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .plist { display: flex; flex-direction: column; gap: 8px; max-height: 760px; overflow: auto; padding-right: 2px; }
+  .pitem { text-align: left; border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; background: #fff;
+    border-left: 4px solid var(--c); transition: border-color .15s, transform .1s; }
+  .pitem:hover { border-color: var(--c); }
+  .pitem:active { transform: scale(.99); }
+  .pitem .k { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); letter-spacing: .04em; }
+  .pitem .k em { font-style: normal; font-weight: 700; color: var(--c); }
+  .pitem b { display: block; font-size: 13.5px; font-weight: 700; margin-top: 4px; }
+  .pitem.used { opacity: .55; }
+  .pitem.used .k em::after { content: " · 담김"; }
+
+  .board { padding: 20px 20px 22px; }
+  .board-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .board-head p { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .tools { display: flex; gap: 8px; }
+  .tbtn { height: 36px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: #fff; font-size: 13px; font-weight: 600; }
+  .scroll { overflow-x: auto; }
+  .grid { display: grid; grid-template-columns: 88px repeat(5, minmax(140px, 1fr)); gap: 8px; min-width: 780px; }
+  .dh { padding: 8px 10px 10px; }
+  .dh b { display: block; font-size: 12px; letter-spacing: .08em; color: var(--accent); }
+  .dh span { font-size: 14px; font-weight: 800; }
+  .dh small { display: block; font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .rh { padding: 12px 4px 0 2px; font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
+  .rh small { display: block; font-size: 11px; font-weight: 500; color: var(--muted); margin-top: 3px; }
+  .slot { min-height: 118px; border: 1.5px dashed var(--line); border-radius: 12px; background: #fafbfc;
+    display: flex; align-items: center; justify-content: center; font-size: 12.5px; color: var(--muted); }
+  .slot.eve { min-height: 84px; }
+  .slot.empty:hover { border-color: #c9ccd6; color: var(--ink-2); }
+  .slot.sel { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .lunch { grid-column: 2 / -1; height: 30px; border-radius: 8px; background: repeating-linear-gradient(135deg, #eef0f3 0 8px, #f5f6f8 8px 16px);
+    display: grid; place-items: center; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .blk { width: 100%; height: 100%; min-height: inherit; border-radius: 12px; padding: 11px 12px; text-align: left;
+    background: var(--bg-c); color: var(--ink); border: 1px solid transparent; border-left: 4px solid var(--c); position: relative; display: flex; flex-direction: column; }
+  .slot:has(.blk) { border: 0; background: none; }
+  .blk .k { font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--c); }
+  .blk b { font-size: 13.5px; font-weight: 700; line-height: 1.4; margin-top: 5px; }
+  .blk .meta { margin-top: auto; padding-top: 8px; font-size: 11.5px; color: var(--ink-2); display: flex; gap: 6px; flex-wrap: wrap; }
+  .blk .meta span { background: rgba(255,255,255,.7); padding: 2px 7px; border-radius: 5px; }
+  .blk .x { position: absolute; top: 7px; right: 7px; width: 22px; height: 22px; border-radius: 6px; font-size: 14px; line-height: 22px; text-align: center;
+    color: var(--muted); opacity: 0; transition: opacity .15s; }
+  .blk:hover .x, .blk:focus-within .x { opacity: 1; }
+  .blk .x:hover { background: rgba(0,0,0,.06); color: var(--ink); }
+
+  .notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+  .note { padding: 18px 20px; }
+  .note .t { font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--accent); }
+  .note p { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); margin-top: 8px; }
+
+  .cta { background: var(--navy); color: #fff; border-radius: 18px; padding: 36px 40px; display: flex; align-items: center; justify-content: space-between; margin: 0 0 64px; }
+  .cta h2 { font-size: 22px; font-weight: 800; }
+  .cta p { font-size: 14px; color: #aab0c4; margin-top: 10px; }
+  .btn { height: 48px; padding: 0 20px; border-radius: 9px; font-weight: 700; font-size: 14.5px; display: inline-flex; align-items: center; gap: 8px; }
+  .btn.p { background: var(--accent); color: #fff; }
+  footer { background: #fff; border-top: 1px solid var(--line); }
+  footer .wrap { height: 64px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--muted); }
+
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); background: var(--ink); color: #fff; font-size: 13px;
+    padding: 10px 16px; border-radius: 10px; opacity: 0; transition: .2s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (max-width: 1100px) {
+    nav { display: none; }
+    .hero { grid-template-columns: 1fr; gap: 28px; }
+    .builder { grid-template-columns: 1fr; }
+    .side { position: static; }
+    .plist { max-height: 280px; }
+    .notes { grid-template-columns: 1fr; }
+    .cta { flex-direction: column; align-items: flex-start; gap: 18px; }
+  }
+  @media (max-width: 600px) {
+    h1 { font-size: 32px; }
+    .stats { grid-template-columns: repeat(2, 1fr); row-gap: 12px; }
+    .h-right span:not(.btn-dark) { display: none; }
+  }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="logo"><i>V</i>VLS</div>
+  <nav><span>프로그램 찾기</span><span class="on">단체 프로그램 구성</span><span>기관·강사 참여</span><span>VLS 소개</span><span>고객지원</span></nav>
+  <div class="h-right"><span>KR</span><span>로그인</span><span class="btn-dark">회원가입</span></div>
+</div></header>
+
+<main class="wrap">
+  <div class="crumb">홈 › 단체 프로그램 구성 › <b>시간표 만들기</b></div>
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow">SCHEDULE BUILDER · 5 DAYS</div>
+      <h1>강좌를 골라 담아<br><em>우리 그룹의 일주일.</em></h1>
+      <p class="lead">교육 강좌와 문화 체험, 캠퍼스·기업 방문을 자유롭게 조합하세요.<br>
+        빈 칸을 누른 뒤 왼쪽 프로그램을 선택하면 시간표에 들어갑니다.<br>
+        아래는 5일 일정으로 구성한 샘플입니다.</p>
+    </div>
+
+    <div class="card plan">
+      <div class="plan-top"><span>MY SCHEDULE</span><b>SAMPLE</b></div>
+      <div class="group">상하이 ○○고등학교 교류단
+        <span>2026. 11. 16 (월) – 11. 20 (금) · 학생 28명 + 인솔 2명</span></div>
+      <div class="stats">
+        <div><strong id="sDays">5</strong><span>일정</span></div>
+        <div><strong id="sCount">0</strong><span>프로그램</span></div>
+        <div><strong id="sHours">0h</strong><span>총 시간</span></div>
+        <div><strong id="sFields">0</strong><span>분야</span></div>
+      </div>
+      <div class="mix" id="mix"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+
+  <div class="builder">
+    <aside class="card side">
+      <h2>프로그램 담기</h2>
+      <p class="hint">시간표에서 빈 칸을 고른 뒤 프로그램을 누르세요. 칸을 고르지 않으면 첫 번째 빈 칸에 들어갑니다.</p>
+      <div class="chips" id="chips"></div>
+      <div class="plist" id="plist"></div>
+    </aside>
+
+    <div>
+      <section class="card board">
+        <div class="board-head">
+          <div><h2>주간 시간표</h2><p>오전 09:30–12:30 · 오후 14:00–17:00 · 저녁 18:30–20:30</p></div>
+          <div class="tools">
+            <button class="tbtn" id="btnSample">샘플 불러오기</button>
+            <button class="tbtn" id="btnClear">모두 비우기</button>
+          </div>
+        </div>
+        <div class="scroll"><div class="grid" id="grid"></div></div>
+      </section>
+
+      <div class="notes">
+        <div class="card note"><div class="t">이동</div><p>모든 일정에 숙소 ↔ 동서대학교 전용 버스가 포함됩니다. 기업·공방 방문은 현장 이동 시간이 30분 정도 더 걸립니다.</p></div>
+        <div class="card note"><div class="t">언어</div><p>교육 강좌와 문화 체험은 한국어로 진행하며, 중국어 통역을 지원합니다.</p></div>
+        <div class="card note"><div class="t">우천 시</div><p>야외 탐방(H-02, H-08)은 실내 공예 프로그램으로 바꿔 운영할 수 있습니다.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <div><h2>이 시간표로 견적을 받아 보세요.</h2>
+      <p>담은 일정과 인원을 보내주시면 강사·장소를 확인한 뒤 최종 일정과 Tuition Fee를 안내해 드립니다.</p></div>
+    <span class="btn p">일정 보내기 →</span>
+  </div>
+</main>
+
+<footer><div class="wrap"><span>VLS Platform · 배움과 경험을 연결합니다.</span><span>주관 · 동서대학교 컴퓨터공학과</span></div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const CATS = {
+  edu: { name: "교육 강좌", c: "var(--edu)", bg: "var(--edu-bg)" },
+  her: { name: "문화 체험", c: "var(--her)", bg: "var(--her-bg)" },
+  cam: { name: "캠퍼스 방문", c: "var(--cam)", bg: "var(--cam-bg)" },
+  ind: { name: "기업 방문", c: "var(--ind)", bg: "var(--ind-bg)" },
+  com: { name: "공통", c: "var(--com)", bg: "var(--com-bg)" },
+};
+
+const PROGRAMS = [
+  { id: "E-01", tag: "AI",      cat: "edu", title: "AI 기초와 생활 속 인공지능", h: 2,   type: "이론+체험" },
+  { id: "E-02", tag: "AI",      cat: "edu", title: "머신러닝 체험 실습",         h: 3,   type: "실습" },
+  { id: "E-03", tag: "AIGC",    cat: "edu", title: "생성형 AI로 만드는 이미지·영상", h: 3, type: "실습" },
+  { id: "E-04", tag: "CERAMIC", cat: "her", title: "도자공예 체험",               h: 3,   type: "공예" },
+  { id: "E-05", tag: "DESIGN",  cat: "edu", title: "UX/UI 디자인 입문",          h: 2,   type: "이론+실습" },
+  { id: "E-06", tag: "DESIGN",  cat: "edu", title: "굿즈·캐릭터 디자인 워크숍",   h: 3,   type: "실습" },
+  { id: "E-07", tag: "CONTENT", cat: "edu", title: "영상 콘텐츠 기획 및 제작",    h: 3,   type: "실습" },
+  { id: "E-08", tag: "CONTENT", cat: "edu", title: "메타버스·게임 콘텐츠 체험",   h: 2,   type: "체험" },
+  { id: "H-01", tag: "LIFE",    cat: "her", title: "부산 전통문화 체험(한복·다도)", h: 2, type: "체험" },
+  { id: "H-02", tag: "LOCAL",   cat: "her", title: "지역 시장·관광지 연계 탐방",  h: 3,   type: "탐방" },
+  { id: "H-03", tag: "CRAFT",   cat: "her", title: "수영야류 탈 만들기",          h: 2,   type: "공예" },
+  { id: "H-04", tag: "CRAFT",   cat: "her", title: "나전칠기 소품 공방",          h: 3,   type: "공예" },
+  { id: "H-05", tag: "CRAFT",   cat: "her", title: "한지·전통 매듭 공예",         h: 2,   type: "공예" },
+  { id: "H-06", tag: "FOOD",    cat: "her", title: "동래파전·전통 음식 쿠킹",     h: 2,   type: "체험" },
+  { id: "H-07", tag: "LIFE",    cat: "her", title: "사찰 문화 짧은 체험",         h: 3,   type: "체험" },
+  { id: "H-08", tag: "LOCAL",   cat: "her", title: "감천문화마을 골목 기록",      h: 3,   type: "탐방" },
+  { id: "C-01", tag: "CAMPUS",  cat: "cam", title: "동서대학교 캠퍼스 투어·학과 소개", h: 2, type: "방문" },
+  { id: "C-02", tag: "CAMPUS",  cat: "cam", title: "대학생 버디와 교류 세션",     h: 2,   type: "교류" },
+  { id: "I-01", tag: "INDUSTRY",cat: "ind", title: "센텀시티 IT 기업 방문",       h: 3,   type: "방문" },
+  { id: "I-02", tag: "INDUSTRY",cat: "ind", title: "영상·콘텐츠 스튜디오 견학",   h: 2,   type: "방문" },
+  { id: "O-01", tag: "COMMON",  cat: "com", title: "오리엔테이션·환영식",         h: 1.5, type: "공통" },
+  { id: "O-02", tag: "COMMON",  cat: "com", title: "작품 발표회·수료식",          h: 2,   type: "공통" },
+];
+const byId = Object.fromEntries(PROGRAMS.map(p => [p.id, p]));
+
+const DAYS = [
+  { n: "DAY 1", d: "11. 16 (월)", s: "도착 · 시작" },
+  { n: "DAY 2", d: "11. 17 (화)", s: "AI · 전통" },
+  { n: "DAY 3", d: "11. 18 (수)", s: "AI · 산업" },
+  { n: "DAY 4", d: "11. 19 (목)", s: "공예 · 지역" },
+  { n: "DAY 5", d: "11. 20 (금)", s: "디자인 · 수료" },
+];
+const ROWS = [
+  { k: "am",  n: "오전", t: "09:30–12:30" },
+  { k: "pm",  n: "오후", t: "14:00–17:00" },
+  { k: "eve", n: "저녁", t: "18:30–20:30" },
+];
+
+const SAMPLE = {
+  "0-am": "O-01", "0-pm": "C-01", "0-eve": "H-06",
+  "1-am": "E-01", "1-pm": "H-01",
+  "2-am": "E-03", "2-pm": "I-01", "2-eve": "C-02",
+  "3-am": "E-04", "3-pm": "H-02",
+  "4-am": "E-06", "4-pm": "O-02",
+};
+
+let plan = { ...SAMPLE };
+let selected = null;
+let filter = "all";
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmtH = h => (Number.isInteger(h) ? h : h.toFixed(1)) + "h";
+
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 1600);
+}
+
+function renderChips() {
+  const opts = [["all", "전체"], ...Object.entries(CATS).map(([k, v]) => [k, v.name])];
+  $("#chips").innerHTML = opts.map(([k, n]) =>
+    `<button class="chip${filter === k ? " on" : ""}" data-f="${k}">${n}</button>`).join("");
+}
+
+function renderList() {
+  const used = new Set(Object.values(plan));
+  $("#plist").innerHTML = PROGRAMS.filter(p => filter === "all" || p.cat === filter).map(p => {
+    const c = CATS[p.cat];
+    return `<button class="pitem${used.has(p.id) ? " used" : ""}" data-p="${p.id}" style="--c:${c.c}">
+      <div class="k"><span>${p.id} / ${p.tag}</span><em>${fmtH(p.h)}</em></div><b>${esc(p.title)}</b></button>`;
+  }).join("");
+}
+
+function renderGrid() {
+  let html = `<div></div>` + DAYS.map(d => `<div class="dh"><b>${d.n}</b><span>${d.d}</span><small>${d.s}</small></div>`).join("");
+  ROWS.forEach((r, ri) => {
+    if (ri === 1) html += `<div class="rh">점심<small>12:30–14:00</small></div><div class="lunch">점심 · 학생식당 또는 주변 식당</div>`;
+    html += `<div class="rh">${r.n}<small>${r.t}</small></div>`;
+    DAYS.forEach((_, di) => {
+      const key = `${di}-${r.k}`, pid = plan[key], eve = r.k === "eve" ? " eve" : "";
+      if (pid) {
+        const p = byId[pid], c = CATS[p.cat];
+        html += `<div class="slot${eve}" data-s="${key}"><div class="blk" style="--c:${c.c};--bg-c:${c.bg}">
+          <span class="k">${p.id} / ${p.tag}</span><b>${esc(p.title)}</b>
+          <div class="meta"><span>${fmtH(p.h)}</span><span>${p.type}</span></div>
+          <button class="x" data-rm="${key}" aria-label="빼기">×</button></div></div>`;
+      } else {
+        html += `<div class="slot empty${eve}${selected === key ? " sel" : ""}" data-s="${key}">${selected === key ? "여기에 담기" : "+ 비어 있음"}</div>`;
+      }
+    });
+  });
+  $("#grid").innerHTML = html;
+}
+
+function renderSummary() {
+  const items = Object.values(plan).map(id => byId[id]);
+  const hours = items.reduce((a, p) => a + p.h, 0);
+  const per = {};
+  items.forEach(p => per[p.cat] = (per[p.cat] || 0) + p.h);
+  $("#sCount").textContent = items.length;
+  $("#sHours").textContent = fmtH(hours);
+  $("#sFields").textContent = Object.keys(per).filter(k => k !== "com").length;
+  const keys = Object.keys(CATS).filter(k => per[k]);
+  $("#mix").innerHTML = keys.map(k => `<b style="width:${per[k] / hours * 100}%;background:${CATS[k].c}"></b>`).join("");
+  $("#legend").innerHTML = keys.map(k => `<span style="--c:${CATS[k].c}">${CATS[k].name} ${fmtH(per[k])}</span>`).join("");
+}
+
+function render() { renderChips(); renderList(); renderGrid(); renderSummary(); }
+
+function firstEmpty() {
+  for (const r of ROWS) for (let d = 0; d < DAYS.length; d++) {
+    const k = `${d}-${r.k}`; if (!plan[k]) return k;
+  }
+  return null;
+}
+
+document.addEventListener("click", e => {
+  const chip = e.target.closest("[data-f]");
+  if (chip) { filter = chip.dataset.f; renderChips(); renderList(); return; }
+
+  const rm = e.target.closest("[data-rm]");
+  if (rm) { const p = byId[plan[rm.dataset.rm]]; delete plan[rm.dataset.rm]; selected = rm.dataset.rm; render(); toast(`${p.id} 을(를) 뺐습니다`); return; }
+
+  const slot = e.target.closest(".slot.empty");
+  if (slot) { selected = selected === slot.dataset.s ? null : slot.dataset.s; renderGrid(); return; }
+
+  const item = e.target.closest("[data-p]");
+  if (item) {
+    const key = selected || firstEmpty();
+    if (!key) { toast("빈 칸이 없습니다. 먼저 하나를 빼 주세요."); return; }
+    plan[key] = item.dataset.p; selected = null; render();
+    const [d, r] = key.split("-");
+    toast(`${DAYS[d].n} ${ROWS.find(x => x.k === r).n}에 ${item.dataset.p} 을(를) 담았습니다`);
+  }
+});
+$("#btnSample").addEventListener("click", () => { plan = { ...SAMPLE }; selected = null; render(); toast("샘플 일정을 불러왔습니다"); });
+$("#btnClear").addEventListener("click", () => { plan = {}; selected = null; render(); });
+
+render();
+</script>
+</body>
+</html>
