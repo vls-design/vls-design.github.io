@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VLS · 강좌 등록</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --ink:#141a2e; --ink-2:#4a5068; --muted:#8a90a3; --line:#e6e8ee; --bg:#f6f7f9;
+  --card:#fff; --chip:#f1f2f5; --accent:#4b57d6; --accent-soft:#eef0fc; --radius:14px;
+  --ok:#1f8a78; --ok-bg:#e6f4f1; --warn:#b06a3b; --warn-bg:#f8efe7; --err:#d64b5a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,"Malgun Gothic",-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+
+/* header */
+.gnb{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.gnb-in{max-width:1200px;margin:0 auto;height:64px;padding:0 24px;display:flex;align-items:center;gap:32px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.logo b{width:28px;height:28px;border-radius:7px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:14px}
+.menu{display:flex;gap:28px;margin:0 auto;font-size:14px;font-weight:600;color:var(--ink-2)}
+.menu a.on{color:var(--accent)}
+.gnb-r{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--ink-2)}
+.me{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--ink)}
+.me i{width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-style:normal;font-weight:700;font-size:13px}
+
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.crumb{font-size:12px;color:var(--muted);padding:22px 0 0}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding:36px 0 30px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--accent);display:flex;align-items:center;gap:8px}
+.eyebrow:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+h1{font-size:40px;line-height:1.2;letter-spacing:-.02em;margin:14px 0 12px;font-weight:800}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{color:var(--ink-2);margin:0;max-width:560px}
+.hero-act{display:flex;gap:8px;flex-wrap:wrap}
+
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 16px;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.btn:hover{border-color:#cfd3dd}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.pri:hover{background:#3f4ac4}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.ghost{border-style:dashed;color:var(--ink-2);width:100%;justify-content:center;background:transparent}
+.btn.sm{padding:7px 10px;font-size:12px;border-radius:8px}
+.btn.block{width:100%;justify-content:center;padding:14px}
+
+/* layout */
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr) 340px;gap:28px;padding:32px 0 80px;align-items:start}
+.toc{position:sticky;top:96px;font-size:13px}
+.toc h4{font-size:11px;letter-spacing:.08em;color:var(--muted);margin:0 0 12px;font-weight:700}
+.toc a{display:flex;align-items:center;gap:10px;padding:8px 0;color:var(--ink-2);font-weight:600}
+.toc a span{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;font-size:11px;color:var(--muted);flex:none}
+.toc a.done span{background:var(--ok);border-color:var(--ok);color:#fff}
+.toc a.active{color:var(--accent)}
+.toc a.active span{border-color:var(--accent);color:var(--accent)}
+
+/* sections */
+.sec{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin-bottom:20px}
+.sec-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:22px}
+.sec-h .no{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--accent)}
+.sec-h h2{font-size:20px;margin:4px 0 2px;letter-spacing:-.01em}
+.sec-h p{margin:0;font-size:13px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 18px}
+.full{grid-column:1/-1}
+.f label,.f .lbl{display:flex;align-items:baseline;gap:2px;font-size:13px;font-weight:700;margin-bottom:7px}
+.f label>small,.f .lbl>small{margin-left:auto}
+.f label .req,.f .lbl .req{color:var(--accent);margin-left:3px}
+.f label small,.f .lbl small{font-weight:500;color:var(--muted)}
+.f .hint{font-size:12px;color:var(--muted);margin-top:6px}
+.f.invalid input,.f.invalid textarea,.f.invalid select,.f.invalid .chips{border-color:var(--err)!important;box-shadow:0 0 0 3px #fbe9eb}
+.f .errmsg{display:none;font-size:12px;color:var(--err);margin-top:6px}
+.f.invalid .errmsg{display:block}
+input[type=text],input[type=number],input[type=email],input[type=tel],select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:#fff;outline:none;transition:.15s}
+textarea{resize:vertical;min-height:92px}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+input::placeholder,textarea::placeholder{color:#b3b7c4}
+.unit{position:relative}
+.unit input{padding-right:44px}
+.unit em{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-style:normal;font-size:13px;color:var(--muted)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;border:1px solid transparent;border-radius:12px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip span{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border-radius:999px;background:var(--chip);font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer;border:1px solid transparent;transition:.15s}
+.chip input:checked+span{background:var(--accent-soft);color:var(--accent);border-color:#cdd2f6}
+.chip input:focus-visible+span{outline:2px solid var(--accent)}
+.cat{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cat .chip span{display:flex;flex-direction:column;align-items:flex-start;border-radius:12px;padding:12px 14px;background:#fff;border:1px solid var(--line);gap:2px}
+.cat .chip span b{font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.cat .chip input:checked+span{border-color:var(--accent);background:var(--accent-soft)}
+.cat .chip input:checked+span b{color:var(--accent)}
+
+/* outputs */
+.outs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.out{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.drop{aspect-ratio:16/10;background:var(--chip);display:grid;place-items:center;position:relative;cursor:pointer;color:var(--muted);font-size:13px;text-align:center;background-size:cover;background-position:center}
+.drop.has{color:transparent}
+.drop.has .tag{color:#fff}
+.drop:hover{background-color:#eceef2}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop .tag{position:absolute;left:10px;top:10px;font-size:10px;font-weight:800;letter-spacing:.08em;background:rgba(20,26,46,.75);color:#fff;padding:4px 7px;border-radius:5px}
+.drop .ic{font-size:22px;display:block;margin-bottom:4px}
+.out-b{padding:12px;display:grid;gap:8px}
+.out-b select,.out-b input{padding:8px 10px;font-size:13px;border-radius:8px}
+.out-b .row{display:flex;gap:8px}
+.out-b .row select{width:110px;flex:none}
+
+/* timeline */
+.tl{display:grid;gap:10px}
+.tl-row{display:grid;grid-template-columns:96px 1fr;gap:14px;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;position:relative}
+.tl-time{font-size:12px;font-weight:700;color:var(--accent);padding-top:10px;font-variant-numeric:tabular-nums}
+.tl-time small{display:block;color:var(--muted);font-weight:600;margin-top:2px}
+.tl-f{display:grid;grid-template-columns:1fr 110px 96px;gap:8px}
+.tl-f textarea{grid-column:1/-1;min-height:60px;font-size:13px}
+.tl-f input,.tl-f select{padding:9px 11px;font-size:13px}
+.tl-del{position:absolute;right:-9px;top:-9px;width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:12px;color:var(--muted);cursor:pointer;display:grid;place-items:center}
+.tl-del:hover{color:var(--err);border-color:var(--err)}
+.tl-sum{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:13px;padding:12px 14px;border-radius:10px;background:var(--chip);color:var(--ink-2)}
+.tl-sum b{color:var(--ink)}
+.tl-sum.ok{background:var(--ok-bg);color:var(--ok)}
+.tl-sum.warn{background:var(--warn-bg);color:var(--warn)}
+.bar{height:8px;border-radius:99px;background:#fff;overflow:hidden;display:flex;margin-top:10px}
+.bar i{display:block;height:100%}
+
+/* learn */
+.learn{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.lc{border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:8px;background:#fff}
+.lc .n{font-size:12px;font-weight:800;color:var(--accent)}
+.lc input,.lc textarea{padding:9px 11px;font-size:13px}
+.lc textarea{min-height:70px}
+.tags{display:flex;flex-wrap:wrap;gap:5px;min-height:24px}
+.tags span{font-size:11px;background:var(--chip);padding:3px 8px;border-radius:99px;color:var(--ink-2);font-weight:600}
+
+/* related */
+.rel{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.rel .chip span{width:100%;border-radius:10px;background:#fff;border:1px solid var(--line);justify-content:space-between;padding:11px 13px}
+.rel .chip span b{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.rel .chip input:checked+span{border-color:var(--accent)}
+
+/* aside */
+.aside{position:sticky;top:96px;display:grid;gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 30px rgba(20,26,46,.05)}
+.pv-top{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.pv-top b{color:var(--accent)}
+.pv-eb{margin-top:16px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--accent);min-height:16px}
+.pv-title{font-size:21px;font-weight:800;line-height:1.3;margin:6px 0 6px;letter-spacing:-.01em;word-break:keep-all}
+.pv-title.empty{color:#c3c6d0}
+.pv-desc{font-size:13px;color:var(--ink-2);margin:0 0 14px;min-height:20px}
+.pv-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.pv-chips span{font-size:11px;font-weight:600;padding:4px 8px;border-radius:6px;background:var(--chip);color:var(--ink-2)}
+.pv-chips span:first-child{background:var(--accent-soft);color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats b{display:block;font-size:22px;font-weight:800}
+.stats small{font-size:11px;color:var(--muted)}
+.kv{display:grid;gap:9px;padding-top:14px;font-size:12px}
+.kv div{display:flex;justify-content:space-between;gap:12px}
+.kv dt{color:var(--muted);flex:none}
+.kv dd{margin:0;font-weight:600;text-align:right}
+.chk h4{margin:0 0 4px;font-size:14px;display:flex;justify-content:space-between}
+.chk h4 b{color:var(--accent)}
+.prog{height:6px;background:var(--chip);border-radius:99px;overflow:hidden;margin:10px 0 14px}
+.prog i{display:block;height:100%;background:var(--accent);width:0;transition:.3s}
+.chk ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:13px;color:var(--ink-2)}
+.chk li{display:flex;align-items:center;gap:8px}
+.chk li:before{content:"";width:16px;height:16px;border-radius:50%;border:1.5px solid #cfd3dd;flex:none}
+.chk li.ok{color:var(--ink)}
+.chk li.ok:before{background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.2l2.6 2.6L12 5.4' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E") center/12px no-repeat;border-color:var(--ok)}
+.acts{display:grid;gap:8px}
+.acts .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.note{font-size:12px;color:var(--muted);text-align:center;margin:2px 0 0}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:var(--chip);color:var(--ink-2)}
+.status:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:13px 18px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:.25s;z-index:50;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(20,26,46,.45);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
+.modal.show{display:flex}
+.modal-c{background:#fff;border-radius:18px;max-width:440px;width:100%;padding:28px}
+.modal-c h3{margin:0 0 8px;font-size:20px}
+.modal-c p{margin:0 0 18px;color:var(--ink-2);font-size:14px}
+.steps{display:grid;gap:10px;margin-bottom:20px;font-size:13px}
+.steps div{display:flex;gap:10px;align-items:flex-start}
+.steps b{font-size:11px;color:var(--accent);background:var(--accent-soft);padding:3px 7px;border-radius:5px;flex:none}
+
+@media (max-width:1100px){
+  .layout{grid-template-columns:minmax(0,1fr) 320px}
+  .toc{display:none}
+}
+@media (max-width:860px){
+  .menu{display:none}
+  .layout{grid-template-columns:1fr}
+  .aside{position:static;order:-1}
+  .aside .card.pv{display:none}
+  h1{font-size:30px}
+}
+@media (max-width:640px){
+  .wrap,.gnb-in{padding:0 16px}
+  .sec{padding:20px 16px}
+  .grid2,.grid3,.outs,.learn,.rel{grid-template-columns:1fr}
+  .cat{grid-template-columns:1fr 1fr}
+  .tl-row{grid-template-columns:1fr}
+  .tl-time{padding-top:0}
+  .tl-f{grid-template-columns:1fr 1fr}
+  .tl-f input[data-k=title]{grid-column:1/-1}
+  .gnb-r .hide-m{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="gnb">
+  <div class="gnb-in">
+    <a class="logo" href="#"><b>V</b>VLS</a>
+    <nav class="menu">
+      <a href="#">프로그램 찾기</a>
+      <a href="#">단체 프로그램 구성</a>
+      <a href="#" class="on">기관·강사 참여</a>
+      <a href="#">VLS 소개</a>
+      <a href="#">고객지원</a>
+    </nav>
+    <div class="gnb-r">
+      <a href="#" class="hide-m">강사 센터</a>
+      <span class="me"><i>강</i><span class="hide-m">강사님</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="crumb">홈 › 기관·강사 참여 › 강사 센터 › 새 강좌 등록</div>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">INSTRUCTOR · NEW COURSE</div>
+      <h1>내 강좌를 등록하고,<br><em>메뉴판에 올려보세요.</em></h1>
+      <p class="lead">입력한 내용은 강좌 상세 페이지 형식으로 그대로 보여집니다. 운영 관리자 검토 후 교육 강좌 메뉴판에 공개됩니다.</p>
+    </div>
+    <div class="hero-act">
+      <span class="status" id="saveState">작성 중 · 저장 전</span>
+      <button class="btn" type="button" id="fillDemo">E-03 예시로 채우기</button>
+    </div>
+  </section>
+
+  <div class="layout">
+    <!-- TOC -->
+    <nav class="toc" id="toc">
+      <h4>작성 순서</h4>
+      <a href="#s1" data-s="s1"><span>1</span>기본 정보</a>
+      <a href="#s2" data-s="s2"><span>2</span>운영 정보</a>
+      <a href="#s3" data-s="s3"><span>3</span>결과물 예시</a>
+      <a href="#s4" data-s="s4"><span>4</span>수업 진행</a>
+      <a href="#s5" data-s="s5"><span>5</span>배우는 것</a>
+      <a href="#s6" data-s="s6"><span>6</span>함께 담을 강좌</a>
+      <a href="#s7" data-s="s7"><span>7</span>강사 정보</a>
+    </nav>
+
+    <!-- FORM -->
+    <form id="form" novalidate>
+      <!-- 1 -->
+      <section class="sec" id="s1">
+        <div class="sec-h"><div><div class="no">01 / BASIC</div><h2>기본 정보</h2><p>메뉴판 카드와 상세 페이지 상단에 표시됩니다.</p></div></div>
+        <div class="grid2">
+          <div class="f full" data-req="cat">
+            <div class="lbl">분야<span><span class="req">*</span></span></div>
+            <div class="cat chips">
+              <label class="chip"><input type="radio" name="cat" value="AI"><span><b>AI</b>인공지능</span></label>
+              <label class="chip"><input type="radio" name="cat" value="AIGC"><span><b>AIGC</b>생성형 AI</span></label>
+              <label class="chip"><input type="radio" name="cat" value="DESIGN"><span><b>DESIGN</b>디자인</span></label>
+              <label class="chip"><input type="radio" name="cat" value="CONTENT"><span><b>CONTENT</b>콘텐츠</span></label>
+            </div>
+            <div class="errmsg">분야를 선택해 주세요.</div>
+          </div>
+          <div class="f full" data-req="title">
+            <label for="title">강좌명<span><span class="req">*</span></span><small><span id="titleCnt">0</span>/30</small></label>
+            <input type="text" id="title" name="title" maxlength="30" placeholder="예) 생성형 AI로 만드는 이미지·영상">
+            <div class="errmsg">강좌명을 입력해 주세요.</div>
+          </div>
+          <div class="f full" data-req="summary">
+            <label for="summary">한 줄 소개<span><span class="req">*</span></span><small><span id="sumCnt">0</span>/40</small></label>
+            <input type="text" id="summary" name="summary" maxlength="40" placeholder="예) 프롬프트 설계부터 짧은 영상 완성까지 실습합니다.">
+            <div class="hint">메뉴판 카드에 노출되는 문장입니다.</div>
+            <div class="errmsg">한 줄 소개를 입력해 주세요.</div>
+          </div>
+          <div class="f full">
+            <label for="desc">상세 소개<small>상세 페이지 상단 본문</small></label>
+            <textarea id="desc" name="desc" placeholder="예) 문장 한 줄로 부산의 장면을 이미지로 그리고, 그 이미지를 이어 나만의 15초 숏폼 영상으로 완성해 봅니다."></textarea>
+          </div>
+          <div class="f">
+            <label for="keywords">영문 키워드<small>최대 3개</small></label>
+            <input type="text" id="keywords" name="keywords" placeholder="예) PROMPT, IMAGE, VIDEO">
+            <div class="hint">상단 라벨에 PROMPT·IMAGE·VIDEO 형태로 표시됩니다.</div>
+          </div>
+          <div class="f">
+            <label for="code">강좌 코드</label>
+            <input type="text" id="code" name="code" readonly value="E-09" style="background:var(--chip);color:var(--ink-2)">
+            <div class="hint">분야 선택 시 자동 부여 · 승인 후 확정</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="sec" id="s2">
+        <div class="sec-h"><div><div class="no">02 / OPERATION</div><h2>운영 정보</h2><p>COURSE INFO 카드와 일정 배정에 사용됩니다.</p></div></div>
+        <div class="grid3">
+          <div class="f" data-req="format">
+            <label for="format">수업 형태<span><span class="req">*</span></span></label>
+            <select id="format" name="format">
+              <option value="">선택</option><option>이론</option><option>실습</option><option>체험</option><option>이론+실습</option><option>이론+체험</option>
+            </select>
+            <div class="errmsg">형태를 선택해 주세요.</div>
+          </div>
+          <div class="f" data-req="hours">
+            <label for="hours">소요 시간<span><span class="req">*</span></span></label>
+            <select id="hours" name="hours">
+              <option value="">선택</option><option value="2">2시간</option><option value="2.5">2.5시간</option><option value="3">3시간</option>
+            </select>
+            <div class="errmsg">소요 시간을 선택해 주세요.</div>
+          </div>
+          <div class="f" data-req="cap">
+            <label for="cap">최대 정원<span><span class="req">*</span></span></label>
+            <div class="unit"><input type="number" id="cap" name="cap" min="1" max="200" placeholder="30"><em>명</em></div>
+            <div class="errmsg">정원을 입력해 주세요.</div>
+          </div>
+          <div class="f full" data-req="target">
+            <div class="lbl">대상<span><span class="req">*</span><small style="margin-left:6px">복수 선택</small></span></div>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="target" value="초등 단체"><span>초등 단체</span></label>
+              <label class="chip"><input type="checkbox" name="target" value="중·고 단체"><span>중·고 단체</span></label>
+              <label class="chip"><input type="checkbox" name="target" value="대학생 교류단"><span>대학생 교류단</span></label>
+              <label class="chip"><input type="checkbox" name="target" value="관광객"><span>관광객</span></label>
+              <label class="chip"><input type="checkbox" name="target" value="일반 그룹"><span>일반 그룹</span></label>
+            </div>
+            <div class="errmsg">대상을 하나 이상 선택해 주세요.</div>
+          </div>
+          <div class="f">
+            <label for="age">권장 연령</label>
+            <select id="age" name="age"><option value="">제한 없음</option><option>초등학생 이상</option><option>중학생 이상</option><option>고등학생 이상</option><option>성인</option></select>
+          </div>
+          <div class="f">
+            <label for="outCount">결과물 수</label>
+            <div class="unit"><input type="number" id="outCount" name="outCount" min="0" placeholder="2"><em>종</em></div>
+          </div>
+          <div class="f">
+            <label for="outKind">결과물 종류</label>
+            <input type="text" id="outKind" name="outKind" placeholder="이미지·영상">
+          </div>
+          <div class="f full" data-req="place">
+            <label for="place">장소<span><span class="req">*</span></span></label>
+            <input type="text" id="place" name="place" placeholder="예) 동서대학교 컴퓨터공학과 실습실">
+            <div class="errmsg">장소를 입력해 주세요.</div>
+          </div>
+          <div class="f full">
+            <label for="prep">준비물</label>
+            <input type="text" id="prep" name="prep" placeholder="예) 없음 (실습 PC 제공)">
+          </div>
+          <div class="f">
+            <label for="staffT">강사</label>
+            <div class="unit"><input type="number" id="staffT" name="staffT" min="1" value="1"><em>명</em></div>
+          </div>
+          <div class="f">
+            <label for="staffA">실습 조교</label>
+            <div class="unit"><input type="number" id="staffA" name="staffA" min="0" value="0"><em>명</em></div>
+          </div>
+          <div class="f">
+            <label for="pcmode">실습 환경</label>
+            <select id="pcmode" name="pcmode"><option value="">해당 없음</option><option>1인 1PC</option><option>2인 1PC</option><option>조별 1PC</option><option>개인 기기</option></select>
+          </div>
+          <div class="f full">
+            <div class="lbl">진행 언어</div>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="lang" value="한국어" checked><span>한국어</span></label>
+              <label class="chip"><input type="checkbox" name="lang" value="영어"><span>영어</span></label>
+              <label class="chip"><input type="checkbox" name="lang" value="중국어"><span>중국어</span></label>
+              <label class="chip"><input type="checkbox" name="lang" value="일본어"><span>일본어</span></label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="sec" id="s3">
+        <div class="sec-h"><div><div class="no">03 / SHOWCASE</div><h2>결과물 예시</h2><p>“이런 결과물을 만듭니다” 영역 · 지난 수업 작품이나 시안을 올려주세요.</p></div></div>
+        <div class="outs" id="outs"></div>
+        <div class="f" style="margin-top:12px"><div class="hint">이미지 JPG·PNG, 영상은 대표 썸네일 이미지 · 장당 10MB 이하 · 참가자 얼굴이 보이는 경우 동의 여부를 확인해 주세요.</div></div>
+      </section>
+
+      <!-- 4 -->
+      <section class="sec" id="s4">
+        <div class="sec-h">
+          <div><div class="no">04 / TIMELINE</div><h2>수업 진행</h2><p>“수업은 이렇게 진행됩니다” 영역 · 시간은 순서대로 자동 계산됩니다.</p></div>
+        </div>
+        <div class="tl" id="tl"></div>
+        <button class="btn ghost" type="button" id="addTl" style="margin-top:10px">+ 단계 추가</button>
+        <div class="tl-sum" id="tlSum"></div>
+      </section>
+
+      <!-- 5 -->
+      <section class="sec" id="s5">
+        <div class="sec-h"><div><div class="no">05 / LEARNING</div><h2>배우는 것</h2><p>핵심 학습 내용 3가지 · 태그는 쉼표로 구분합니다.</p></div></div>
+        <div class="f" style="margin-bottom:14px">
+          <label for="learnHead">섹션 부제</label>
+          <input type="text" id="learnHead" name="learnHead" placeholder="예) 도구보다 원리를, 결과보다 과정을">
+        </div>
+        <div class="learn" id="learn"></div>
+      </section>
+
+      <!-- 6 -->
+      <section class="sec" id="s6">
+        <div class="sec-h"><div><div class="no">06 / PAIRING</div><h2>함께 담으면 좋은 강좌</h2><p>이어 들으면 좋은 강좌를 최대 4개까지 추천하세요.</p></div><span class="status" id="relCnt">0 / 4</span></div>
+        <div class="rel chips" id="rel"></div>
+      </section>
+
+      <!-- 7 -->
+      <section class="sec" id="s7">
+        <div class="sec-h"><div><div class="no">07 / INSTRUCTOR</div><h2>강사 정보</h2><p>연락처는 운영 관리자에게만 공개됩니다.</p></div></div>
+        <div class="grid2">
+          <div class="f" data-req="iname">
+            <label for="iname">이름<span><span class="req">*</span></span></label>
+            <input type="text" id="iname" name="iname" placeholder="홍길동">
+            <div class="errmsg">이름을 입력해 주세요.</div>
+          </div>
+          <div class="f">
+            <label for="irole">직함</label>
+            <select id="irole" name="irole"><option>교수</option><option>강사</option><option>연구원</option><option>외부 전문가</option></select>
+          </div>
+          <div class="f full" data-req="iorg">
+            <label for="iorg">소속<span><span class="req">*</span></span></label>
+            <input type="text" id="iorg" name="iorg" placeholder="예) 동서대학교 컴퓨터공학과">
+            <div class="errmsg">소속을 입력해 주세요.</div>
+          </div>
+          <div class="f" data-req="iemail">
+            <label for="iemail">이메일<span><span class="req">*</span></span></label>
+            <input type="email" id="iemail" name="iemail" placeholder="name@example.ac.kr">
+            <div class="errmsg">올바른 이메일을 입력해 주세요.</div>
+          </div>
+          <div class="f">
+            <label for="itel">연락처</label>
+            <input type="tel" id="itel" name="itel" placeholder="010-0000-0000">
+          </div>
+          <div class="f full">
+            <label for="ibio">강사 소개<small>상세 페이지 하단 노출</small></label>
+            <textarea id="ibio" name="ibio" placeholder="전공 분야, 주요 경력, 수업 스타일을 간단히 적어주세요."></textarea>
+          </div>
+          <div class="f full">
+            <div class="lbl">강의 가능 요일</div>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="days" value="월"><span>월</span></label>
+              <label class="chip"><input type="checkbox" name="days" value="화"><span>화</span></label>
+              <label class="chip"><input type="checkbox" name="days" value="수"><span>수</span></label>
+              <label class="chip"><input type="checkbox" name="days" value="목"><span>목</span></label>
+              <label class="chip"><input type="checkbox" name="days" value="금"><span>금</span></label>
+              <label class="chip"><input type="checkbox" name="days" value="토"><span>토</span></label>
+            </div>
+          </div>
+          <div class="f full" data-req="agree">
+            <label class="chip" style="display:flex"><input type="checkbox" id="agree" name="agree"><span style="border-radius:10px;width:100%">결과물 이미지의 저작권·초상권을 확인했으며, VLS 강좌 페이지 게시에 동의합니다. <b style="color:var(--accent)">(필수)</b></span></label>
+            <div class="errmsg">게시 동의가 필요합니다.</div>
+          </div>
+        </div>
+      </section>
+    </form>
+
+    <!-- ASIDE -->
+    <aside class="aside">
+      <div class="card pv">
+        <div class="pv-top"><span>COURSE INFO · 미리보기</span><b id="pvCode">E-09</b></div>
+        <div class="pv-eb" id="pvEb">분야 선택</div>
+        <div class="pv-title empty" id="pvTitle">강좌명을 입력하세요</div>
+        <p class="pv-desc" id="pvSum"></p>
+        <div class="pv-chips" id="pvChips"></div>
+        <div class="stats">
+          <div><b id="pvH">–</b><small>강좌 소요</small></div>
+          <div><b id="pvCap">–</b><small>최대 정원</small></div>
+          <div><b id="pvOut">–</b><small id="pvOutK">결과물</small></div>
+        </div>
+        <dl class="kv">
+          <div><dt>대상</dt><dd id="pvTarget">–</dd></div>
+          <div><dt>장소</dt><dd id="pvPlace">–</dd></div>
+          <div><dt>준비물</dt><dd id="pvPrep">–</dd></div>
+          <div><dt>진행</dt><dd id="pvStaff">–</dd></div>
+        </dl>
+      </div>
+
+      <div class="card chk">
+        <h4>등록 준비도 <b id="pct">0%</b></h4>
+        <div class="prog"><i id="progBar"></i></div>
+        <ul id="chkList"></ul>
+      </div>
+
+      <div class="acts">
+        <button class="btn pri block" type="button" id="submit">검토 요청하기 →</button>
+        <div class="two">
+          <button class="btn" type="button" id="save" style="justify-content:center">임시저장</button>
+          <button class="btn" type="button" id="reset" style="justify-content:center">초기화</button>
+        </div>
+        <p class="note">검토는 영업일 기준 3일 이내 완료됩니다.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal-c">
+    <div class="eyebrow">REQUEST SENT</div>
+    <h3 id="mTitle" style="margin-top:10px">검토 요청이 접수되었습니다.</h3>
+    <p id="mDesc"></p>
+    <div class="steps">
+      <div><b>STEP 01</b><span>운영 관리자가 내용과 결과물 이미지를 확인합니다.</span></div>
+      <div><b>STEP 02</b><span>수정이 필요하면 이메일로 의견을 드립니다.</span></div>
+      <div><b>STEP 03</b><span>승인되면 강좌 코드가 확정되고 메뉴판에 공개됩니다.</span></div>
+    </div>
+    <button class="btn dark block" type="button" id="mClose">확인</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const form=$('#form');
+const KEY='vls-course-draft';
+const CODES={AI:'E-09',AIGC:'E-09',DESIGN:'E-09',CONTENT:'E-09'};
+const RELATED=[
+  ['E-01 / AI','AI 기초와 생활 속 인공지능'],['E-02 / AI','머신러닝 체험 실습'],
+  ['E-03 / AIGC','생성형 AI로 만드는 이미지·영상'],['E-04 / AIGC','AI 챗봇·콘텐츠 제작 워크숍'],
+  ['E-05 / DESIGN','UX/UI 디자인 입문'],['E-06 / DESIGN','굿즈·캐릭터 디자인 워크숍'],
+  ['E-07 / CONTENT','영상 콘텐츠 기획 및 제작'],['E-08 / CONTENT','메타버스·게임 콘텐츠 체험'],
+  ['02 / HERITAGE','부산 전통문화 체험'],['03 / CAMPUS','교육기관 방문']
+];
+const TYPE_COL={'이론':'#8a90a3','실습':'#4b57d6','발표':'#1f8a78','체험':'#b06a3b','휴식':'#d4d7df'};
+
+/* ---------- builders ---------- */
+const outs=$('#outs');
+function addOut(d={}){
+  const el=document.createElement('div');el.className='out';
+  el.innerHTML=`<label class="drop"><span class="tag">${d.type||'IMAGE'}</span><span><span class="ic">＋</span>이미지 업로드</span><input type="file" accept="image/*"></label>
+  <div class="out-b"><div class="row"><select data-k="type"><option>IMAGE</option><option>VIDEO</option><option>PROMPT</option></select><input type="text" data-k="cap" placeholder="작품 설명 · 예) 광안대교 야경 · 네온 시티"></div>
+  <input type="text" data-k="prompt" placeholder="사용한 프롬프트 (선택)"></div>`;
+  const sel=el.querySelector('select'),tag=el.querySelector('.tag'),drop=el.querySelector('.drop');
+  sel.value=d.type||'IMAGE';
+  el.querySelector('[data-k=cap]').value=d.cap||'';
+  el.querySelector('[data-k=prompt]').value=d.prompt||'';
+  sel.onchange=()=>{tag.textContent=sel.value;update()};
+  el.querySelector('input[type=file]').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    if(f.size>10*1024*1024){toast('10MB 이하 이미지만 올릴 수 있습니다.');return}
+    const r=new FileReader();r.onload=()=>{drop.style.backgroundImage=`url(${r.result})`;drop.classList.add('has');update()};r.readAsDataURL(f);
+  };
+  outs.appendChild(el);
+}
+
+const tl=$('#tl');
+function addTl(d={}){
+  const el=document.createElement('div');el.className='tl-row';
+  el.innerHTML=`<div class="tl-time"><span class="rng">0:00 – 0:00</span><small class="dur">0분</small></div>
+  <div class="tl-f"><input type="text" data-k="title" placeholder="단계 제목 · 예) 프롬프트 설계 실습">
+  <select data-k="type"><option>이론</option><option>실습</option><option>체험</option><option>발표</option><option>휴식</option></select>
+  <div class="unit"><input type="number" data-k="min" min="5" step="5" placeholder="30"><em>분</em></div>
+  <textarea data-k="desc" placeholder="이 단계에서 하는 활동을 한두 문장으로 적어주세요."></textarea></div>
+  <button type="button" class="tl-del" aria-label="단계 삭제">✕</button>`;
+  el.querySelector('[data-k=title]').value=d.title||'';
+  el.querySelector('[data-k=type]').value=d.type||'실습';
+  el.querySelector('[data-k=min]').value=d.min||'';
+  el.querySelector('[data-k=desc]').value=d.desc||'';
+  el.querySelector('.tl-del').onclick=()=>{if(tl.children.length<=1){toast('최소 1개 단계가 필요합니다.');return}el.remove();update()};
+  tl.appendChild(el);
+}
+$('#addTl').onclick=()=>{addTl();update();tl.lastElementChild.querySelector('input').focus()};
+
+const learn=$('#learn');
+function buildLearn(arr=[{},{},{}]){
+  learn.innerHTML='';
+  arr.forEach((d,i)=>{
+    const el=document.createElement('div');el.className='lc';
+    el.innerHTML=`<div class="n">0${i+1}</div><input type="text" data-k="t" placeholder="예) 프롬프트 설계"><textarea data-k="d" placeholder="설명"></textarea><input type="text" data-k="tags" placeholder="태그1, 태그2, 태그3"><div class="tags"></div>`;
+    el.querySelector('[data-k=t]').value=d.t||'';el.querySelector('[data-k=d]').value=d.d||'';el.querySelector('[data-k=tags]').value=d.tags||'';
+    learn.appendChild(el);
+  });
+}
+
+const rel=$('#rel');
+RELATED.forEach(([c,t])=>{
+  const l=document.createElement('label');l.className='chip';
+  l.innerHTML=`<input type="checkbox" name="rel" value="${c}"><span>${t}<b>${c}</b></span>`;
+  rel.appendChild(l);
+});
+rel.addEventListener('change',e=>{
+  const n=$$('input[name=rel]:checked').length;
+  if(n>4){e.target.checked=false;toast('최대 4개까지 선택할 수 있습니다.')}
+});
+
+/* ---------- state ---------- */
+const val=id=>($('#'+id)?.value||'').trim();
+const checked=n=>$$(`input[name=${n}]:checked`).map(i=>i.value);
+const fmtT=m=>`${Math.floor(m/60)}:${String(m%60).padStart(2,'0')}`;
+
+function tlData(){return [...tl.children].map(r=>({title:r.querySelector('[data-k=title]').value.trim(),type:r.querySelector('[data-k=type]').value,min:+r.querySelector('[data-k=min]').value||0,desc:r.querySelector('[data-k=desc]').value.trim()}))}
+function outData(){return [...outs.children].map(o=>({type:o.querySelector('select').value,cap:o.querySelector('[data-k=cap]').value.trim(),prompt:o.querySelector('[data-k=prompt]').value.trim(),img:o.querySelector('.drop').classList.contains('has')}))}
+function learnData(){return [...learn.children].map(l=>({t:l.querySelector('[data-k=t]').value.trim(),d:l.querySelector('[data-k=d]').value.trim(),tags:l.querySelector('[data-k=tags]').value}))}
+
+function update(){
+  const cat=checked('cat')[0]||'';
+  $('#titleCnt').textContent=val('title').length;
+  $('#sumCnt').textContent=val('summary').length;
+  const code=cat?CODES[cat]:'E-09';
+  $('#code').value=code;$('#pvCode').textContent=code;
+  const kw=val('keywords').split(/[,·\s]+/).filter(Boolean).slice(0,3).map(s=>s.toUpperCase());
+  $('#pvEb').textContent=cat?`${code} / ${cat}${kw.length?' · '+kw.join('·'):''}`:'분야 선택';
+  const t=val('title');
+  $('#pvTitle').textContent=t||'강좌명을 입력하세요';$('#pvTitle').classList.toggle('empty',!t);
+  $('#pvSum').textContent=val('summary');
+  const chips=[val('format'),val('hours')?val('hours')+'시간':'',cat,val('age')].filter(Boolean);
+  $('#pvChips').innerHTML=chips.map(c=>`<span>${esc(c)}</span>`).join('');
+  $('#pvH').textContent=val('hours')?val('hours')+'h':'–';
+  $('#pvCap').textContent=val('cap')?val('cap')+'명':'–';
+  $('#pvOut').textContent=val('outCount')?val('outCount')+'종':'–';
+  $('#pvOutK').textContent=val('outKind')?`결과물 (${val('outKind')})`:'결과물';
+  $('#pvTarget').textContent=checked('target').join(' · ')||'–';
+  $('#pvPlace').textContent=val('place')||'–';
+  $('#pvPrep').textContent=val('prep')||'–';
+  const sT=+val('staffT')||0,sA=+val('staffA')||0,role=val('irole')||'강사';
+  $('#pvStaff').textContent=[sT?`${role} ${sT}`:'',sA?`실습 조교 ${sA}`:''].filter(Boolean).join(' · ')||'–';
+
+  // timeline
+  let acc=0;const rows=[...tl.children];const data=tlData();
+  rows.forEach((r,i)=>{const m=data[i].min;r.querySelector('.rng').textContent=`${fmtT(acc)} – ${fmtT(acc+m)}`;r.querySelector('.dur').textContent=`${data[i].type} · ${m}분`;acc+=m});
+  const goal=(+val('hours')||0)*60;const sum=$('#tlSum');
+  const byType={};data.forEach(d=>byType[d.type]=(byType[d.type]||0)+d.min);
+  const parts=Object.entries(byType).filter(([,m])=>m).map(([k,m])=>`${k} ${m}분`).join(' + ');
+  const left=`총 <b>${acc}분</b>${parts?' · '+parts:''}`;
+  let right,cls='';
+  if(!goal){right='소요 시간을 먼저 선택하세요'}
+  else if(acc===goal){right='✓ 소요 시간과 일치';cls='ok'}
+  else{right=`${acc<goal?goal-acc+'분 부족':acc-goal+'분 초과'} (목표 ${goal}분)`;cls='warn'}
+  sum.className='tl-sum '+cls;
+  const bar=acc?`<div class="bar">${data.filter(d=>d.min).map(d=>`<i style="width:${d.min/Math.max(acc,goal)*100}%;background:${TYPE_COL[d.type]}"></i>`).join('')}</div>`:'';
+  sum.innerHTML=`<div style="width:100%"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>${left}</span><span>${right}</span></div>${bar}</div>`;
+
+  // learn tags
+  [...learn.children].forEach(l=>{l.querySelector('.tags').innerHTML=l.querySelector('[data-k=tags]').value.split(',').map(s=>s.trim()).filter(Boolean).slice(0,5).map(s=>`<span>${esc(s)}</span>`).join('')});
+  $('#relCnt').textContent=`${checked('rel').length} / 4`;
+
+  // checklist
+  const outsD=outData(), lD=learnData();
+  const items=[
+    ['s1','기본 정보 (분야·강좌명·소개)',!!(cat&&t&&val('summary'))],
+    ['s2','운영 정보 (형태·시간·정원·대상·장소)',!!(val('format')&&val('hours')&&val('cap')&&checked('target').length&&val('place'))],
+    ['s3','결과물 예시 2개 이상',outsD.filter(o=>o.img||o.cap).length>=2],
+    ['s4','수업 진행 시간 맞추기',!!goal&&acc===goal&&data.every(d=>d.title)],
+    ['s5','배우는 것 3가지',lD.every(l=>l.t)],
+    ['s6','함께 담을 강좌 선택',checked('rel').length>0],
+    ['s7','강사 정보·게시 동의',!!(val('iname')&&val('iorg')&&emailOk(val('iemail'))&&$('#agree').checked)]
+  ];
+  const done=items.filter(i=>i[2]).length,p=Math.round(done/items.length*100);
+  $('#pct').textContent=p+'%';$('#progBar').style.width=p+'%';
+  $('#chkList').innerHTML=items.map(([s,l,ok])=>`<li class="${ok?'ok':''}"><a href="#${s}">${l}</a></li>`).join('');
+  items.forEach(([s,,ok])=>{const a=$(`.toc a[data-s=${s}]`);a&&a.classList.toggle('done',ok)});
+
+  // clear invalid as user fixes
+  $$('.f.invalid').forEach(f=>{if(fieldOk(f.dataset.req))f.classList.remove('invalid')});
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const emailOk=e=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+function fieldOk(k){
+  switch(k){
+    case 'cat':return checked('cat').length>0;
+    case 'target':return checked('target').length>0;
+    case 'agree':return $('#agree').checked;
+    case 'iemail':return emailOk(val('iemail'));
+    default:return !!val(k);
+  }
+}
+
+/* ---------- save / load ---------- */
+function collect(){
+  const o={};
+  $$('#form input[type=text],#form input[type=number],#form input[type=email],#form input[type=tel],#form select,#form textarea').forEach(el=>{if(el.id)o[el.id]=el.value});
+  ['cat','target','lang','rel','days'].forEach(n=>o['_'+n]=checked(n));
+  o._agree=$('#agree').checked;o._tl=tlData();o._outs=outData().map(({img,...r})=>r);o._learn=learnData();
+  return o;
+}
+function apply(o){
+  Object.entries(o).forEach(([k,v])=>{if(k[0]!=='_'){const el=$('#'+k);if(el)el.value=v}});
+  ['cat','target','lang','rel','days'].forEach(n=>$$(`input[name=${n}]`).forEach(i=>i.checked=(o['_'+n]||[]).includes(i.value)));
+  $('#agree').checked=!!o._agree;
+  tl.innerHTML='';(o._tl&&o._tl.length?o._tl:[{}]).forEach(addTl);
+  outs.innerHTML='';(o._outs&&o._outs.length?o._outs:[{},{},{},{}]).forEach(addOut);
+  buildLearn(o._learn&&o._learn.length?o._learn:undefined);
+  update();
+}
+function save(silent){
+  try{localStorage.setItem(KEY,JSON.stringify(collect()));}catch(e){}
+  const d=new Date();$('#saveState').textContent=`임시저장됨 · ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+  if(!silent)toast('임시저장했습니다. (업로드한 이미지는 다시 첨부가 필요합니다)');
+}
+$('#save').onclick=()=>save();
+$('#reset').onclick=()=>{if(!confirm('작성한 내용을 모두 지울까요?'))return;try{localStorage.removeItem(KEY)}catch(e){}form.reset();apply({_lang:['한국어']});$('#saveState').textContent='작성 중 · 저장 전';window.scrollTo(0,0)};
+
+/* ---------- demo fill ---------- */
+$('#fillDemo').onclick=()=>{
+  apply({
+    title:'생성형 AI로 만드는 이미지·영상',summary:'프롬프트 설계부터 짧은 영상 완성까지 실습합니다.',
+    desc:'문장 한 줄로 부산의 장면을 이미지로 그리고, 그 이미지를 이어 나만의 15초 숏폼 영상으로 완성해 봅니다.',
+    keywords:'PROMPT, IMAGE, VIDEO',format:'실습',hours:'3',cap:'30',age:'중학생 이상',outCount:'2',outKind:'이미지·영상',
+    place:'동서대학교 컴퓨터공학과 실습실',prep:'없음 (실습 PC 제공)',staffT:'1',staffA:'2',pcmode:'1인 1PC',
+    learnHead:'도구보다 원리를, 결과보다 과정을',iname:'',irole:'교수',iorg:'동서대학교 컴퓨터공학과',iemail:'',itel:'',
+    ibio:'',
+    _cat:['AIGC'],_target:['중·고 단체','대학생 교류단','일반 그룹'],_lang:['한국어','중국어'],_rel:['E-01 / AI','E-04 / AIGC','E-07 / CONTENT','02 / HERITAGE'],_days:['화','목'],
+    _tl:[
+      {title:'생성형 AI 이해하기',type:'이론',min:30,desc:'이미지·영상 생성 모델의 원리와 저작권·윤리 기준을 짧게 살펴봅니다.'},
+      {title:'프롬프트 설계 실습',type:'실습',min:50,desc:'주제·스타일·구도를 나눠 쓰는 프롬프트 카드로 원하는 장면을 만듭니다.'},
+      {title:'이미지에서 영상으로',type:'실습',min:70,desc:'만든 이미지를 움직이는 컷으로 바꾸고, 자막·음악을 더해 15초로 편집합니다.'},
+      {title:'상영회 · 피드백',type:'발표',min:30,desc:'조별 작품을 함께 보고 강사 피드백을 받은 뒤 결과물을 내려받습니다.'}
+    ],
+    _outs:[
+      {type:'IMAGE',cap:'광안대교 야경 · 네온 시티 스타일',prompt:'부산 광안대교, 밤, 네온 조명, 시네마틱'},
+      {type:'IMAGE',cap:'해운대 여름 · 수채화',prompt:''},
+      {type:'PROMPT',cap:'프롬프트 카드로 장면 설계',prompt:'/subject 갈매기 캐릭터 /style 3D 클레이 /scene 자갈치 시장 앞'},
+      {type:'VIDEO',cap:'우리 조의 부산 숏폼 · 3컷 연결',prompt:''}
+    ],
+    _learn:[
+      {t:'프롬프트 설계',d:'원하는 결과를 말로 정확히 설명하는 법. 주제·스타일·구도·조명을 나눠 씁니다.',tags:'프롬프트 구조, 스타일 키워드, 네거티브 프롬프트'},
+      {t:'이미지 생성·편집',d:'같은 장면을 여러 스타일로 변주하고, 부분 수정으로 완성도를 높입니다.',tags:'텍스트→이미지, 부분 수정, 캐릭터 일관성'},
+      {t:'영상 생성·편집',d:'정지 이미지에 움직임을 주고, 컷을 이어 짧은 이야기로 만듭니다.',tags:'이미지→영상, 컷 편집, 자막·음악'}
+    ]
+  });
+  toast('E-03 예시를 채웠습니다. 강사 정보만 입력하면 됩니다.');
+};
+
+/* ---------- submit ---------- */
+$('#submit').onclick=()=>{
+  const reqs=$$('[data-req]');let first=null;
+  reqs.forEach(f=>{const ok=fieldOk(f.dataset.req);f.classList.toggle('invalid',!ok);if(!ok&&!first)first=f});
+  const goal=(+val('hours')||0)*60,acc=tlData().reduce((a,d)=>a+d.min,0);
+  if(first){first.scrollIntoView({behavior:'smooth',block:'center'});const i=first.querySelector('input,select,textarea');i&&setTimeout(()=>i.focus({preventScroll:true}),400);toast('필수 항목을 확인해 주세요.');return}
+  if(goal&&acc!==goal){$('#s4').scrollIntoView({behavior:'smooth'});toast(`수업 진행 합계(${acc}분)가 소요 시간(${goal}분)과 다릅니다.`);return}
+  save(true);
+  $('#mDesc').textContent=`「${val('title')}」 강좌가 운영 관리자에게 전달되었습니다. 결과는 ${val('iemail')}로 안내드립니다.`;
+  $('#modal').classList.add('show');$('#saveState').textContent='검토 대기 중';
+};
+$('#mClose').onclick=()=>$('#modal').classList.remove('show');
+$('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('show')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modal').classList.remove('show')});
+
+/* ---------- misc ---------- */
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600)}
+form.addEventListener('input',update);form.addEventListener('change',update);
+form.addEventListener('submit',e=>e.preventDefault());
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){$$('.toc a').forEach(a=>a.classList.toggle('active',a.dataset.s===e.target.id))}}),{rootMargin:'-40% 0px -55% 0px'});
+$$('.sec').forEach(s=>io.observe(s));
+
+let draft=null;try{draft=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(draft){apply(draft);$('#saveState').textContent='임시저장본 불러옴'}else apply({_lang:['한국어']});
+})();
+</script>
+</body>
+</html>
